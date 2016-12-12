@@ -1,0 +1,62 @@
+{
+  "name": "tracim_manage_ws",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "NODE_ENV=development && webpack --watch",
+    "servdev": "webpack-dev-server --port 8082 --watch --colors --inline --hot --content-base dist/",
+    "build": "NODE_ENV=production webpack -p",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Côme Huguiès",
+  "license": "ISC",
+  "standard": {
+    "globals": [
+      "fetch",
+      "Blob"
+    ],
+    "parser": "babel-eslint",
+    "ignore": []
+  },
+  "devDependencies": {
+    "babel-core": "^6.17.0",
+    "babel-eslint": "^6.1.2",
+    "babel-loader": "^6.2.5",
+    "babel-plugin-transform-class-properties": "^6.18.0",
+    "babel-plugin-transform-object-rest-spread": "^6.16.0",
+    "babel-polyfill": "^6.16.0",
+    "babel-preset-es2015": "^6.16.0",
+    "babel-preset-react": "^6.16.0",
+    "css-loader": "^0.25.0",
+    "eslint": "^3.8.1",
+    "file-loader": "^0.9.0",
+    "jsdom": "^9.8.3",
+    "node-libs-browser": "^1.0.0",
+    "react-addons-test-utils": "^15.4.0",
+    "script-loader": "^0.7.0",
+    "standard": "^8.4.0",
+    "standard-loader": "^5.0.0",
+    "style-loader": "^0.13.1",
+    "stylus": "^0.54.5",
+    "stylus-loader": "^2.3.1",
+    "url-loader": "^0.5.7",
+    "webpack": "^1.13.2"
+  },
+  "dependencies": {
+    "bootstrap": "^3.3.7",
+    "classnames": "^2.2.5",
+    "font-awesome": "^4.6.3",
+    "lodash.findindex": "^4.6.0",
+    "lodash.reject": "^4.4.0",
+    "react": "^15.3.2",
+    "react-bootstrap": "^0.30.5",
+    "react-color": "^2.3.2",
+    "react-dom": "^15.4.0",
+    "react-redux": "^4.4.5",
+    "redux": "^3.6.0",
+    "redux-logger": "^2.7.0",
+    "redux-thunk": "^2.1.0",
+    "whatwg-fetch": "^1.0.0"
+  }
+}

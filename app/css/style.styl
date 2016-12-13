@@ -56,14 +56,83 @@ $wizardWidth = 868px
       &__name
         float left
         margin-left 5px
-$borderStyle = 1px solid #000
-.roleForm__tab
-  margin 0 auto
-  text-align center
-  th, td
-    padding 3px 5px
-    border-left $borderStyle
-    border-right $borderStyle
-  tr
-    border-top $borderStyle
-    border-bottom $borderStyle
+$borderStyle = 1px solid #ccc
+.roleForm
+  &__backbtn
+    @extends .userForm__backbtn
+    margin-bottom 15px
+  &__tab
+    margin 0 auto
+    text-align center
+    th, td
+      border-left $borderStyle
+      border-right $borderStyle
+    th
+      padding 8px
+    td:nth-child(1)
+      padding 5px 8px
+    tr
+      border-top $borderStyle
+      border-bottom $borderStyle
+.customRadio
+  width 100%
+  height 100%
+  margin 0
+  line-height 35px
+  cursor pointer
+  & > input
+    width 0px
+    height 0px
+    &:before
+      content ''
+      display block
+      position relative
+      top -13px
+      left -8px
+      width 16px
+      height 16px
+      border-radius 16px
+      border 1px solid #aaa
+      cursor pointer
+  &.checked > input:after
+    content ''
+    display block
+    position relative
+    top -26px
+    left -5px
+    width 10px
+    height 10px
+    border-radius 10px
+    background-color green
+.customCheckbox
+  width 100%
+  height 100%
+  margin 0
+  line-height 35px
+  cursor pointer
+  & > input
+    width 0px
+    height 0px
+    &:before
+      content ''
+      display block
+      position relative
+      top -13px
+      left -8px
+      width 16px
+      height 16px
+      border-radius 2px
+      border 1px solid #aaa
+      cursor pointer
+  &.checked > input:after
+    content 'L'
+    display block
+    position relative
+    top -30px
+    left -2px
+    width 10px
+    height 10px
+    color green
+    transform scaleX(-1) rotate(-45deg)
+    font-size 16px
+    font-weight bold

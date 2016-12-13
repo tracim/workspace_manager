@@ -7,20 +7,20 @@ export class WorkspaceForm extends React.Component {
     super()
     this.state = {
       formHeight: '0px',
-      formMaxHeight: '49px'
+      formMaxHeight: '49px' // magic number equals to the total height of the form (must be updated if form's html change)
     }
   }
 
-  showForm = () => {
+  handleShowForm = () => {
     this.setState({formHeight: this.state.formHeight === '0px' ? this.state.formMaxHeight : '0px'})
   }
 
-  assignWorkspace = (e) => {
-    const workspaceId = e.target.value
-    const workspaceName = e.nativeEvent.target[e.nativeEvent.target.selectedIndex].text
-
+  handleAssignWorkspace = (e) => {
     this.setState({...this.state, formHeight: '0px'})
-    if (workspaceId === '') return
+    if (e.target.value === '') return
+
+    const workspaceId = parseInt(e.target.value)
+    const workspaceName = e.nativeEvent.target[e.nativeEvent.target.selectedIndex].text
 
     this.props.dispatch(setWorkspaceData(workspaceId, workspaceName))
     this.props.dispatch(switchForm(1))
@@ -32,7 +32,7 @@ export class WorkspaceForm extends React.Component {
 
         <div className='workspaceForm__item form-group'>
           <div className='col-sm-offset-1 col-sm-10'>
-            <select className='form-control' value={this.props.workspace.id} onChange={this.assignWorkspace}>
+            <select className='form-control' value={this.props.workspace.id} onChange={this.handleAssignWorkspace}>
               <option value=''>Choisir un workspace</option>
               { this.props.workspace.map((item, i) => <option value={item.id} key={'ws_' + i}>{item.name}</option>) }
             </select>
@@ -45,7 +45,7 @@ export class WorkspaceForm extends React.Component {
 
         <div className='workspaceForm__item__text-link form-group'>
           <div className='col-sm-offset-1 col-sm-10'>
-            <span onClick={this.showForm}>Créer un nouveau workspace</span>
+            <span onClick={this.handleShowForm}>Créer un nouveau workspace</span>
           </div>
         </div>
 

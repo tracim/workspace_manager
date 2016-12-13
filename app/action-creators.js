@@ -16,6 +16,31 @@ export const SWITCH_FORM = 'SWITCH_FORM'
 export const SET_WS_DATA = 'SET_WS_DATA'
 export const ADD_USER_DATA = 'ADD_USER_DATA'
 export const REMOVE_USER_DATA = 'REMOVE_USER_DATA'
+export const UPDATE_USER_ROLE_DATA = 'UPDATE_USER_ROLE_DATA'
+export const UPDATE_USER_EMAILNOTIF_DATA = 'UPDATE_USER_EMAILNOTIF_DATA'
+
+export const ROLE_LIST = {
+  READER: {
+    id: 0,
+    label: 'Lecteur'
+  },
+  CONTRIBUTOR: {
+    id: 1,
+    label: 'Contributeur'
+  },
+  CONTENT_MANAGER: {
+    id: 2,
+    label: 'Gestionnaire de contenu'
+  },
+  IN_CHARGE: {
+    id: 3,
+    label: 'Responsable'
+  },
+  ALLOW_MAIL_NOTIF: {
+    id: 4,
+    label: 'Notification par email'
+  }
+}
 
 export function initWorkspace (wsList) {
   return { type: INIT_WORKSPACE, wsList }
@@ -80,4 +105,10 @@ export function addUserData (id, name) {
 }
 export function removeUserData (id) {
   return { type: REMOVE_USER_DATA, id }
+}
+export function updateUserRoleData (userId, roleId) {
+  return { type: UPDATE_USER_ROLE_DATA, userId, roleId }
+}
+export function updateUserEmailnotifData (userId, checked) {
+  return { type: UPDATE_USER_EMAILNOTIF_DATA, userId, checked }
 }

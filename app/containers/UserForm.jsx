@@ -7,7 +7,7 @@ export class UserForm extends React.Component {
     super()
     this.state = {
       formHeight: '0px',
-      formMaxHeight: '273px'
+      formMaxHeight: '273px' // magic number equals to the total height of the form (must be updated if form's html change)
     }
   }
 
@@ -18,8 +18,8 @@ export class UserForm extends React.Component {
   assignUser = (e) => {
     this.setState({...this.state, formHeight: '0px'})
 
-    const userId = e.target.value
-    if (userId === '') return
+    if (e.target.value === '') return
+    const userId = parseInt(e.target.value)
 
     const userName = e.nativeEvent.target[e.nativeEvent.target.selectedIndex].text
 

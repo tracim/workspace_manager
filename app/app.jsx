@@ -4,7 +4,7 @@ import { Provider } from 'react-redux'
 
 import 'bootstrap/dist/css/bootstrap.css'
 require('./css/style.styl')
-// require('./font/font-awesome-4.6.3/css/font-awesome.min.css')
+require('./lib/font-awesome-4.7.0/css/font-awesome.css')
 
 import Modal from './containers/Modal.jsx'
 

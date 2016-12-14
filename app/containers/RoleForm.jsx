@@ -2,7 +2,8 @@ import React from 'react'
 import { connect } from 'react-redux'
 import RoleInput from '../components/RoleInput.jsx'
 import EmailnotifInput from '../components/EmailnotifInput.jsx'
-import { ROLE_LIST, switchForm, updateUserRoleData, updateUserEmailnotifData } from '../action-creators.js'
+import { switchForm, updateUserRoleData, updateUserEmailnotifData } from '../action-creators.js'
+import { ROLE_LIST } from '../lib/helper.js'
 
 export class RoleForm extends React.Component {
   handleChangeRole = (userId, roleId) => {

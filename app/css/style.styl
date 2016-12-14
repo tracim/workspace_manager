@@ -7,7 +7,7 @@
   display block
 $wizardWidth = 868px
 .wizard
-  width wizardWidth
+  width $wizardWidth
   overflow hidden
   &__view
     position relative
@@ -30,6 +30,9 @@ $wizardWidth = 868px
   &__wrapper-hidden
     overflow hidden
     transition height 0.3s
+    &__picto
+      width 25px
+      margin-top 5px
 .userForm
   &__backbtn
     margin 0 0 0 3px
@@ -37,6 +40,12 @@ $wizardWidth = 868px
     display inline-block
     vertical-align top
     width 70%
+  &__item
+    .customCheckbox
+      & > input:before
+        top 5px
+      &.checked > input:after
+        top -12px
   &__recap
     display inline-block
     vertical-align top

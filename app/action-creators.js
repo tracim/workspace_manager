@@ -8,39 +8,21 @@ export const ADD_USER = 'ADD_USER'
 export const UPDATE_USER = 'UPDATE_USER'
 export const REMOVE_USER = 'REMOVE_USER'
 
-export const REQUEST_ASYNC_START = 'REQUEST_ASYNC_START'
-export const REQUEST_ASYNC_END = 'REQUEST_ASYNC_END'
+export const REQUEST_INITDATA_START = 'REQUEST_INITDATA_START'
+export const REQUEST_INITDATA_END = 'REQUEST_INITDATA_END'
+export const REQUEST_CHECKWS_START = 'REQUEST_CHECKWS_START'
+export const REQUEST_CHECKWS_END = 'REQUEST_CHECKWS_END'
+export const REQUEST_CHECKUSER_START = 'REQUEST_CHECKUSER_START'
+export const REQUEST_CHECKUSER_END = 'REQUEST_CHECKUSER_END'
 
 export const SWITCH_FORM = 'SWITCH_FORM'
 
 export const SET_WS_DATA = 'SET_WS_DATA'
 export const ADD_USER_DATA = 'ADD_USER_DATA'
+export const ADD_NEW_USER_DATA = 'ADD_NEW_USER_DATA'
 export const REMOVE_USER_DATA = 'REMOVE_USER_DATA'
 export const UPDATE_USER_ROLE_DATA = 'UPDATE_USER_ROLE_DATA'
 export const UPDATE_USER_EMAILNOTIF_DATA = 'UPDATE_USER_EMAILNOTIF_DATA'
-
-export const ROLE_LIST = {
-  READER: {
-    id: 0,
-    label: 'Lecteur'
-  },
-  CONTRIBUTOR: {
-    id: 1,
-    label: 'Contributeur'
-  },
-  CONTENT_MANAGER: {
-    id: 2,
-    label: 'Gestionnaire de contenu'
-  },
-  IN_CHARGE: {
-    id: 3,
-    label: 'Responsable'
-  },
-  ALLOW_MAIL_NOTIF: {
-    id: 4,
-    label: 'Notification par email'
-  }
-}
 
 export function initWorkspace (wsList) {
   return { type: INIT_WORKSPACE, wsList }
@@ -68,12 +50,12 @@ export function removeUser (id) {
   return { type: REMOVE_USER, id }
 }
 
-export function requestAsyncStart () {
-  return { type: REQUEST_ASYNC_START }
+export function requestAsyncInitStart () {
+  return { type: REQUEST_INITDATA_START }
 }
 export function fetchConfig (urlJsonCfg) {
   return function (dispatch) { // returning a function in an action creator is allowed by the middleware redux-thunk to handle asynchronous actions
-    dispatch(requestAsyncStart()) // set isFetching to true to display a loader
+    dispatch(requestAsyncInitStart()) // set isFetching to true to display a loader
     return fetch(urlJsonCfg, {
       method: 'GET',
       headers: { 'Accept': 'application/json' }
@@ -85,12 +67,12 @@ export function fetchConfig (urlJsonCfg) {
         dispatch(initUser(json.user))
       ])
     )
-    .then(() => dispatch(requestAsyncEnd())) // set isFetching to false to hide the loader
+    .then(() => dispatch(requestAsyncInitEnd())) // set isFetching to false to hide the loader
     .catch((e) => console.log('Error fetching config', e))
   }
 }
-export function requestAsyncEnd () {
-  return { type: REQUEST_ASYNC_END }
+export function requestAsyncInitEnd () {
+  return { type: REQUEST_INITDATA_END }
 }
 
 export function switchForm (formId) {
@@ -102,6 +84,9 @@ export function setWorkspaceData (id, name) {
 }
 export function addUserData (id, name) {
   return { type: ADD_USER_DATA, id, name }
+}
+export function addNewUserData (name, email, pw, canCreateWs, isAdmin, canSendEmail) {
+  return { type: ADD_NEW_USER_DATA, name, email, pw, canCreateWs, isAdmin, canSendEmail }
 }
 export function removeUserData (id) {
   return { type: REMOVE_USER_DATA, id }

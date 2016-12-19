@@ -83,7 +83,7 @@ export class WorkspaceForm extends React.Component {
           </div>
         </div>
 
-        <button className='userForm__recap__nextbtn btn' onClick={() => dispatch(switchForm(1))} disabled={!isBtnNextAllowed}>
+        <button className='workspaceForm__nextbtn btn' onClick={() => dispatch(switchForm(1))} disabled={!isBtnNextAllowed}>
           Suite
         </button>
 

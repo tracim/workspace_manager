@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import WorkspaceForm from './WorkspaceForm.jsx'
 import UserForm from './UserForm.jsx'
-import RoleForm from './RoleForm.jsx'
+import Recap from './Recap.jsx'
 
 export class Wizard extends React.Component {
   render () {
@@ -11,7 +11,7 @@ export class Wizard extends React.Component {
         <div className='wizard__view' style={{left: -868 * this.props.activeForm}}>
           <WorkspaceForm />
           <UserForm />
-          <RoleForm />
+          <Recap />
         </div>
       </div>
     )

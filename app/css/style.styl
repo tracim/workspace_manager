@@ -33,19 +33,22 @@ $wizardWidth = 868px
     &__picto
       width 25px
       margin-top 5px
+  &__nextbtn
+    float right
+    margin 15px 3px 0 0
 .userForm
   &__backbtn
     margin 0 0 0 3px
   &__form
     display inline-block
     vertical-align top
-    width 70%
   &__item
     .customCheckbox
       & > input:before
         top 5px
       &.checked > input:after
         top -12px
+  /*
   &__recap
     display inline-block
     vertical-align top
@@ -65,7 +68,15 @@ $wizardWidth = 868px
       &__name
         float left
         margin-left 5px
+  */
 $borderStyle = 1px solid #ccc
+$btnRemoveGeneric
+  position absolute
+  top 50%
+  transform translateY(-50%)
+  left 30px
+  width 24px
+  height 24px
 .roleForm
   &__backbtn
     @extends .userForm__backbtn
@@ -73,19 +84,38 @@ $borderStyle = 1px solid #ccc
   &__tab
     margin 0 auto
     text-align center
+    &__removeuser
+      @extends $btnRemoveGeneric
+      border 1px solid #ccc
+      border-radius 14px
+      color red
+      font-weight bold
+      text-align center
+      cursor pointer
+      transition left 0.15s
+      &__wrapper
+        @extends $btnRemoveGeneric
+        left -30px
+        width 30px
+        overflow hidden
     th, td
       border-left $borderStyle
       border-right $borderStyle
+      vertical-align middle
     th
       padding 8px
     td:nth-child(1)
+      position relative
+      max-width 160px
       padding 5px 8px
     tr
       border-top $borderStyle
       border-bottom $borderStyle
+      &:hover
+        .roleForm__tab__removeuser
+          left 0px
 .customRadio
   width 100%
-  height 100%
   margin 0
   line-height 35px
   cursor pointer
@@ -115,7 +145,6 @@ $borderStyle = 1px solid #ccc
     background-color green
 .customCheckbox
   width 100%
-  height 100%
   margin 0
   line-height 35px
   cursor pointer

@@ -1,7 +1,7 @@
 import React from 'react'
 import { ASYNC_STATUS } from '../lib/helper.js'
 
-export function StatusPicto ({ status }) {
+export function StatusPicto ({ status }) { // this is not a reducer
   switch (status) {
     case ASYNC_STATUS.INIT:
       return null

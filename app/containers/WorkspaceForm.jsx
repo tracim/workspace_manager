@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { switchForm, setWorkspaceData } from '../action-creators.js'
+import { switchForm, setWorkspaceData, resetUserData } from '../action-creators.js'
 import StatusPicto from '../components/StatusPicto.jsx'
 import { ASYNC_STATUS, WS_RESERVED_ID } from '../lib/helper.js'
 
@@ -29,11 +29,12 @@ export class WorkspaceForm extends React.Component {
     const workspaceName = e.nativeEvent.target[e.nativeEvent.target.selectedIndex].text
 
     this.props.dispatch(setWorkspaceData(workspaceId, workspaceName))
+    this.props.dispatch(resetUserData())
     this.props.dispatch(switchForm(1))
   }
 
   handleChangeWsName = (e) => {
-    this.setState({...this.state, checkWsStatus: 1})
+    this.setState({...this.state, checkWsStatus: ASYNC_STATUS.IN_PROGRESS})
 
     fetch('/temp_check_async.json', {
       method: 'GET',
@@ -84,7 +85,7 @@ export class WorkspaceForm extends React.Component {
         </div>
 
         <button className='workspaceForm__nextbtn btn' onClick={() => dispatch(switchForm(1))} disabled={!isBtnNextAllowed}>
-          Suite
+          <i className='fa fa-chevron-right' />
         </button>
 
       </div>

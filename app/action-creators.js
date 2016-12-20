@@ -18,6 +18,7 @@ export const REQUEST_CHECKUSER_END = 'REQUEST_CHECKUSER_END'
 export const SWITCH_FORM = 'SWITCH_FORM'
 
 export const SET_WS_DATA = 'SET_WS_DATA'
+export const RESET_USER_DATA = 'RESET_USER_DATA'
 export const ADD_USER_DATA = 'ADD_USER_DATA'
 export const ADD_NEW_USER_DATA = 'ADD_NEW_USER_DATA'
 export const REMOVE_USER_DATA = 'REMOVE_USER_DATA'
@@ -40,11 +41,11 @@ export function removeWorkspace (id) {
 export function initUser (userList) {
   return { type: INIT_USER, userList }
 }
-export function addUser (id, name, email, canCreateWs, isAdmin, canSendEmail) {
-  return { type: ADD_USER, id, name, email, canCreateWs, isAdmin, canSendEmail }
+export function addUser (id, name, email, canCreateWs, isAdmin, sendEmailNotif) {
+  return { type: ADD_USER, id, name, email, canCreateWs, isAdmin, sendEmailNotif }
 }
-export function updateUser (id, name, email, canCreateWs, isAdmin, canSendEmail) {
-  return { type: ADD_USER, id, name, email, canCreateWs, isAdmin, canSendEmail }
+export function updateUser (id, name, email, canCreateWs, isAdmin, sendEmailNotif) {
+  return { type: ADD_USER, id, name, email, canCreateWs, isAdmin, sendEmailNotif }
 }
 export function removeUser (id) {
   return { type: REMOVE_USER, id }
@@ -64,6 +65,7 @@ export function fetchConfig (urlJsonCfg) {
     .then(json =>
       Promise.all([ // thoses dispatch will update every parts of the store according to the config got by ajax
         dispatch(initWorkspace(json.workspace)),
+        json.selectedWsId.id !== null && dispatch(setWorkspaceData(json.selectedWsId.id, json.selectedWsId.name)),
         dispatch(initUser(json.user))
       ])
     )
@@ -82,11 +84,14 @@ export function switchForm (formId) {
 export function setWorkspaceData (id, name) {
   return { type: SET_WS_DATA, id, name }
 }
+export function resetUserData () {
+  return { type: RESET_USER_DATA }
+}
 export function addUserData (id, name) {
   return { type: ADD_USER_DATA, id, name }
 }
-export function addNewUserData (name, email, pw, canCreateWs, isAdmin, canSendEmail) {
-  return { type: ADD_NEW_USER_DATA, name, email, pw, canCreateWs, isAdmin, canSendEmail }
+export function addNewUserData (name, email, pw, canCreateWs, isAdmin, sendEmailNotif) {
+  return { type: ADD_NEW_USER_DATA, name, email, pw, canCreateWs, isAdmin, sendEmailNotif }
 }
 export function removeUserData (id) {
   return { type: REMOVE_USER_DATA, id }
@@ -94,6 +99,6 @@ export function removeUserData (id) {
 export function updateUserRoleData (userId, roleId) {
   return { type: UPDATE_USER_ROLE_DATA, userId, roleId }
 }
-export function updateUserEmailnotifData (userId, checked) {
+export function updateUserSubscribeNotifData (userId, checked) {
   return { type: UPDATE_USER_EMAILNOTIF_DATA, userId, checked }
 }

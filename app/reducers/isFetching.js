@@ -14,18 +14,6 @@ export default function isFetching (state = {
       // while (new Date().getTime() < now + 2000) null
       return {...state, initData: false}
 
-    // case REQUEST_CHECKWS_START:
-    //   return {...state, checkWs: true}
-
-    // case REQUEST_CHECKWS_END:
-    //   return {...state, checkWs: false}
-
-    // case REQUEST_CHECKUSER_START:
-    //   return {...state, checkUser: true}
-
-    // case REQUEST_CHECKUSER_END:
-    //   return {...state, checkUser: false}
-
     default:
       return state
   }

@@ -3,117 +3,6 @@
   display block
   height 0
   clear both
-.modal
-  display block
-$wizardWidth = 868px
-.wizard
-  width $wizardWidth
-  overflow hidden
-  &__view
-    position relative
-    left 0
-    width $wizardWidth * 3
-    overflow hidden
-    transition left 1s
-.workspaceForm, .userForm, .roleForm
-  display inline-block
-  vertical-align top
-  width $wizardWidth
-  &__item
-    &__separator
-      font-weight bold
-    &__text-link span
-      color #1a0dab
-      cursor pointer
-      &:hover
-        text-decoration underline
-  &__wrapper-hidden
-    overflow hidden
-    transition height 0.3s
-    &__picto
-      width 25px
-      margin-top 5px
-  &__nextbtn
-    float right
-    margin 15px 3px 0 0
-.userForm
-  &__backbtn
-    margin 0 0 0 3px
-  &__form
-    display inline-block
-    vertical-align top
-  &__item
-    .customCheckbox
-      & > input:before
-        top 5px
-      &.checked > input:after
-        top -12px
-  /*
-  &__recap
-    display inline-block
-    vertical-align top
-    width 30%
-    &__nextbtn
-      float right
-      margin 15px 3px 0 0
-    &__list__item
-      cursor pointer
-      &__delete
-        float left
-        position relative
-        top 3px
-        font-weight bold
-        font-size 12px
-        color red
-      &__name
-        float left
-        margin-left 5px
-  */
-$borderStyle = 1px solid #ccc
-$btnRemoveGeneric
-  position absolute
-  top 50%
-  transform translateY(-50%)
-  left 30px
-  width 24px
-  height 24px
-.roleForm
-  &__backbtn
-    @extends .userForm__backbtn
-    margin-bottom 15px
-  &__tab
-    margin 0 auto
-    text-align center
-    &__removeuser
-      @extends $btnRemoveGeneric
-      border 1px solid #ccc
-      border-radius 14px
-      color red
-      font-weight bold
-      text-align center
-      cursor pointer
-      transition left 0.15s
-      &__wrapper
-        @extends $btnRemoveGeneric
-        left -30px
-        width 30px
-        overflow hidden
-    th, td
-      border-left $borderStyle
-      border-right $borderStyle
-      vertical-align middle
-    th
-      padding 8px
-    td:nth-child(1)
-      position relative
-      max-width 160px
-      padding 5px 8px
-    tr
-      border-top $borderStyle
-      border-bottom $borderStyle
-      &:hover
-        .roleForm__tab__removeuser
-          left 0px
 .customRadio
   width 100%
   margin 0
@@ -174,3 +63,127 @@ $btnRemoveGeneric
     transform scaleX(-1) rotate(-45deg)
     font-size 16px
     font-weight bold
+.modal
+  display block
+$wizardWidth = 868px
+.wizard
+  width $wizardWidth
+  overflow hidden
+  &__view
+    position relative
+    left 0
+    width $wizardWidth * 3
+    overflow hidden
+    transition left 1s
+.workspaceForm, .userForm, .recap
+  display inline-block
+  vertical-align top
+  width $wizardWidth
+  &__item
+    &__separator
+      font-weight bold
+    &__text-link span
+      color #1a0dab
+      cursor pointer
+      &:hover
+        text-decoration underline
+  &__wrapper-hidden
+    overflow hidden
+    transition height 0.3s
+    &__picto
+      width 25px
+      margin-top 5px
+  &__nextbtn
+    float right
+    margin 15px 3px 0 0
+.userForm
+  &__backbtn
+    margin 0 0 0 3px
+  &__form
+    display inline-block
+    vertical-align top
+  &__item
+    .customCheckbox
+      & > input:before
+        top 5px
+      &.checked > input:after
+        top -12px
+$borderStyle = 1px solid #ccc
+$btnRemoveGeneric
+  position absolute
+  top 50%
+  transform translateY(-50%)
+  left 30px
+  width 24px
+  height 24px
+.roleForm
+  &__backbtn
+    @extends .userForm__backbtn
+    margin-bottom 15px
+  &__tab
+    margin 0 auto
+    text-align center
+    &__removeuser
+      @extends $btnRemoveGeneric
+      border 1px solid #ccc
+      border-radius 14px
+      color red
+      font-weight bold
+      text-align center
+      cursor pointer
+      transition left 0.15s
+      &__wrapper
+        @extends $btnRemoveGeneric
+        left -30px
+        width 30px
+        overflow hidden
+    th, td
+      border-left $borderStyle
+      border-right $borderStyle
+      vertical-align middle
+    th
+      padding 8px
+      text-align center
+    td:nth-child(1)
+      position relative
+      max-width 160px
+      padding 5px 8px
+    tr
+      border-top $borderStyle
+      border-bottom $borderStyle
+      &:hover
+        .roleForm__tab__removeuser
+          left 0px
+.recap
+  padding 15px
+  &__title
+    font-size 16px
+    font-weight bold
+  &__subtitle
+    padding 10px 0 0 15px
+    text-decoration underline
+  &__nextbtn
+    padding 5px 20px
+    font-size 20px
+    i
+      transition transform 0.3s
+      transition-timing-function linear
+    &:hover > i
+      transform rotate(100deg)
+  &__data
+    &__item
+      padding 5px 0 0 30px
+      &__action, &__name, &__status
+        display inline-block
+        vertical-align top
+        width auto
+      &__action
+        width 80px
+        padding 0 15px 0 0
+      &__name
+        max-width 440px
+      &__status
+        float right
+        position relative
+        top -2px
+        left -14px

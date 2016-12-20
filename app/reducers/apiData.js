@@ -1,4 +1,4 @@
-import { SET_WS_DATA, ADD_USER_DATA, ADD_NEW_USER_DATA, REMOVE_USER_DATA, UPDATE_USER_ROLE_DATA, UPDATE_USER_EMAILNOTIF_DATA } from '../action-creators.js'
+import { SET_WS_DATA, ADD_USER_DATA, RESET_USER_DATA, ADD_NEW_USER_DATA, REMOVE_USER_DATA, UPDATE_USER_ROLE_DATA, UPDATE_USER_EMAILNOTIF_DATA } from '../action-creators.js'
 import reject from 'lodash.reject'
 import findIndex from 'lodash.findindex'
 import { ROLE_LIST, generateNewUserId } from '../lib/helper.js'
@@ -13,14 +13,17 @@ export default function apiData (state = {
     case SET_WS_DATA:
       return {...state, workspace: { id: action.id, name: action.name }}
 
+    case RESET_USER_DATA:
+      return {...state, user: []}
+
     case ADD_USER_DATA:
       return findIndex(state.user, { id: action.id }) === -1
-        ? {...state, user: [...state.user, { id: action.id, isNew: false, name: action.name, role: 0, emailnotif: false }]}
+        ? {...state, user: [...state.user, { id: action.id, isNew: false, name: action.name, role: ROLE_LIST.READER.id, subscribeNotif: false }]}
         : state
 
     case ADD_NEW_USER_DATA:
-      const { name, email, pw, canCreateWs, isAdmin, canSendEmail } = action
-      return {...state, user: [...state.user, { id: generateNewUserId(), isNew: true, name, email, pw, canCreateWs, isAdmin, canSendEmail, role: ROLE_LIST.READER.id, emailnotif: false }]}
+      const { name, email, pw, canCreateWs, isAdmin, sendEmailNotif } = action
+      return {...state, user: [...state.user, { id: generateNewUserId(), isNew: true, name, email, pw, canCreateWs, isAdmin, sendEmailNotif, role: ROLE_LIST.READER.id, subscribeNotif: false }]}
 
     case REMOVE_USER_DATA:
       return {...state, user: reject(state.user, { id: action.id })}
@@ -38,7 +41,7 @@ export default function apiData (state = {
       return {
         ...state,
         user: state.user.map((oneUser) => oneUser.id === action.userId
-          ? {...oneUser, emailnotif: action.checked}
+          ? {...oneUser, subscribeNotif: action.checked}
           : oneUser
         )
       }

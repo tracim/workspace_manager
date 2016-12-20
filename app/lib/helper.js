@@ -1,25 +1,38 @@
 import { store } from '../store.js'
 
 export const ROLE_LIST = {
-  READER: {
+  NOT_APPLICABLE: {
     id: 0,
+    label: ''
+  },
+  READER: {
+    id: 1,
     label: 'Lecteur'
   },
   CONTRIBUTOR: {
-    id: 1,
+    id: 2,
     label: 'Contributeur'
   },
   CONTENT_MANAGER: {
-    id: 2,
+    id: 4,
     label: 'Gestionnaire de contenu'
   },
-  IN_CHARGE: {
-    id: 3,
+  WORKSPACE_MANAGER: {
+    id: 8,
     label: 'Responsable'
   },
-  ALLOW_MAIL_NOTIF: {
-    id: 4,
-    label: 'Notification par email'
+  SEND_USER_NOTIF: {
+    id: 16,
+    label: "Abonner l'utilisateur aux notifications"
+  }
+}
+export function displayRole (roleID) {
+  switch (roleID) {
+    case ROLE_LIST.READER.id: return ROLE_LIST.READER.label
+    case ROLE_LIST.CONTRIBUTOR.id: return ROLE_LIST.CONTRIBUTOR.label
+    case ROLE_LIST.CONTENT_MANAGER.id: return ROLE_LIST.CONTENT_MANAGER.label
+    case ROLE_LIST.WORKSPACE_MANAGER.id: return ROLE_LIST.WORKSPACE_MANAGER.label
+    case ROLE_LIST.SEND_USER_NOTIF.id: return ROLE_LIST.SEND_USER_NOTIF.label
   }
 }
 

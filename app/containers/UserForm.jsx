@@ -21,7 +21,7 @@ export class UserForm extends React.Component {
         pw: '',
         canCreateWs: false,
         isAdmin: false,
-        canSendEmail: false
+        sendEmailNotif: false
       },
       nameValid: true,
       emailValid: true
@@ -50,18 +50,13 @@ export class UserForm extends React.Component {
     this.setState({...this.state, newUser: {...this.state.newUser, [checkboxName]: !this.state.newUser[checkboxName]}})
   }
 
-  handleChangeInput = (e) => {
-    let checkedInput
-    if (e.target.id === 'newUserName') checkedInput = { editedField: 'name', asyncCheck: 'checkNameStatus' }
-    else if (e.target.id === 'newUserEmail') checkedInput = { editedField: 'email', asyncCheck: 'checkEmailStatus' }
-    else return
-
+  handleChangeEmailInput = (e) => {
     this.setState({
       ...this.state,
       newUser: {
         ...this.state.newUser,
-        [checkedInput.editedField]: e.target.value,
-        [checkedInput.asyncCheck]: ASYNC_STATUS.IN_PROGRESS
+        email: e.target.value,
+        checkEmailStatus: ASYNC_STATUS.IN_PROGRESS
       }
     })
 
@@ -70,23 +65,27 @@ export class UserForm extends React.Component {
       headers: { 'Accept': 'application/json' }
     })
     .then(response => response.json())
-    .then(json => this.setState({...this.state, newUser: {...this.state.newUser, [checkedInput.asyncCheck]: json.response}}))
+    .then(json => this.setState({...this.state, newUser: {...this.state.newUser, checkEmailStatus: json.response}}))
     .catch((e) => console.log('Error fetching user data', e))
   }
 
-  handleChangePw = (e) => {
+  handleChangeNameInput = (e) => {
+    this.setState({...this.state, newUser: {...this.state.newUser, name: e.target.value}})
+  }
+
+  handleChangePwInput = (e) => {
     this.setState({...this.state, newUser: {...this.state.newUser, pw: e.target.value}})
   }
 
   handleClickAddNewUser = () => {
-    const { name, email, pw, canCreateWs, isAdmin, canSendEmail } = this.state.newUser
+    const { name, email, pw, canCreateWs, isAdmin, sendEmailNotif } = this.state.newUser
 
     if (name === '' || email === '') {
       this.setState({...this.state, nameValid: name !== '', emailValid: email !== ''})
       return
     }
 
-    this.props.dispatch(addNewUserData(name, email, pw, canCreateWs, isAdmin, canSendEmail))
+    this.props.dispatch(addNewUserData(name, email, pw, canCreateWs, isAdmin, sendEmailNotif))
 
     this.setState({
       ...this.state,
@@ -100,7 +99,7 @@ export class UserForm extends React.Component {
         pw: '',
         canCreateWs: false,
         isAdmin: false,
-        canSendEmail: false
+        sendEmailNotif: false
       },
       nameValid: true,
       emailValid: true
@@ -108,14 +107,16 @@ export class UserForm extends React.Component {
   }
 
   render () {
-    const { user } = this.props
+    const { user, addedUser, dispatch } = this.props
     const { newUser, nameValid, emailValid, formHeight, roleFormVisibility } = this.state
 
     const canCreateWsClass = newUser.canCreateWs ? ' checked' : ''
     const isAdminClass = newUser.isAdmin ? ' checked' : ''
-    const canSendEmailClass = newUser.canSendEmail ? ' checked' : ''
+    const sendEmailNotifClass = newUser.sendEmailNotif ? ' checked' : ''
     const isNameValid = nameValid ? '' : ' has-error'
     const isEmailValid = emailValid ? '' : ' has-error'
+
+    const isBtnNextAllowed = (addedUser.length >= 1)
 
     return (
       <div className='userForm form-horizontal'>
@@ -124,7 +125,9 @@ export class UserForm extends React.Component {
 
           <div className='userForm__item form-group'>
             <div className='col-sm-2'>
-              <button className='userForm__backbtn btn' onClick={() => this.props.dispatch(switchForm(0))}>Retour</button>
+              <button className='userForm__backbtn btn' onClick={() => dispatch(switchForm(0))}>
+                <i className='fa fa-chevron-left' />
+              </button>
             </div>
             <div className='col-sm-9'>
               <select className='form-control' onChange={(e) => this.assignUser(e.target.value)}>
@@ -145,17 +148,14 @@ export class UserForm extends React.Component {
             <div className={'userForm__item form-group' + isNameValid}>
               <label className='col-sm-2 control-label' htmlFor='newUserName'>Nom : </label>
               <div className='col-sm-8'>
-                <input type='text' className='form-control' id='newUserName' placeholder='Nom' onChange={this.handleChangeInput} value={newUser.name} />
-              </div>
-              <div className='userForm__wrapper-hidden__picto col-sm-1'>
-                <StatusPicto status={newUser.checkNameStatus} />
+                <input type='text' className='form-control' id='newUserName' placeholder='Nom' onChange={this.handleChangeNameInput} value={newUser.name} />
               </div>
             </div>
 
             <div className={'userForm__item form-group' + isEmailValid}>
               <label className='col-sm-2 control-label' htmlFor='newUserEmail'>Email : </label>
               <div className='col-sm-8'>
-                <input type='text' className='form-control' id='newUserEmail' placeholder='Email' onChange={this.handleChangeInput} value={newUser.email} />
+                <input type='text' className='form-control' id='newUserEmail' placeholder='Email' onChange={this.handleChangeEmailInput} value={newUser.email} />
               </div>
               <div className='userForm__wrapper-hidden__picto col-sm-1'>
                 <StatusPicto status={newUser.checkEmailStatus} />
@@ -165,7 +165,7 @@ export class UserForm extends React.Component {
             <div className='userForm__item form-group'>
               <label className='col-sm-2 control-label' htmlFor='newUserPasssword'>Mot de passe : </label>
               <div className='col-sm-8'>
-                <input type='password' className='form-control' id='newUserPasssword' placeholder='Mot de passe (facultatif)' onChange={this.handleChangePw} value={newUser.pw} />
+                <input type='password' className='form-control' id='newUserPasssword' placeholder='Mot de passe (facultatif)' onChange={this.handleChangePwInput} value={newUser.pw} />
               </div>
             </div>
 
@@ -189,9 +189,9 @@ export class UserForm extends React.Component {
 
             <div className='col-sm-offset-2 col-sm-9'>
               <div className='userForm__item checkbox'>
-                <label className={'customCheckbox' + canSendEmailClass} htmlFor='newUserCanSendEmail'>
-                  <input type='checkbox' id='newUserCanSendEmail' onClick={() => this.handleClickCheckboxNewUser('canSendEmail')} value={newUser.canSendEmail} />
-                  Cet utilisateur peut envoyer des email aux utilisateurs
+                <label className={'customCheckbox' + sendEmailNotifClass} htmlFor='newUserSendEmailNotif'>
+                  <input type='checkbox' id='newUserSendEmailNotif' onClick={() => this.handleClickCheckboxNewUser('sendEmailNotif')} value={newUser.sendEmailNotif} />
+                  Notifier par mail l'utilisateur de la création de son compte
                 </label>
               </div>
             </div>
@@ -205,6 +205,10 @@ export class UserForm extends React.Component {
         </div>
 
         <RoleForm visible={roleFormVisibility} />
+
+        <button className='userForm__nextbtn btn' onClick={() => dispatch(switchForm(2))} disabled={!isBtnNextAllowed}>
+          <i className='fa fa-chevron-right' />
+        </button>
 
       </div>
     )

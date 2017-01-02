@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { switchForm, setWorkspaceData, resetUserData } from '../action-creators.js'
+import { switchForm, setWorkspaceData } from '../action-creators.js'
 import StatusPicto from '../components/StatusPicto.jsx'
 import { ASYNC_STATUS, WS_RESERVED_ID } from '../lib/helper.js'
 
@@ -17,7 +17,7 @@ export class WorkspaceForm extends React.Component {
 
   handleShowForm = () => {
     this.setState({formHeight: this.state.formHeight === '0px' ? this.state.formMaxHeight : '0px', checkWsStatus: ASYNC_STATUS.INIT})
-    this.props.dispatch(setWorkspaceData(WS_RESERVED_ID.NEW_WS, ''))
+    this.props.dispatch(setWorkspaceData(WS_RESERVED_ID.NEW_WS, '', [], []))
   }
 
   handleAssignWorkspace = (e) => {
@@ -28,8 +28,7 @@ export class WorkspaceForm extends React.Component {
 
     const workspaceName = e.nativeEvent.target[e.nativeEvent.target.selectedIndex].text
 
-    this.props.dispatch(setWorkspaceData(workspaceId, workspaceName))
-    this.props.dispatch(resetUserData())
+    this.props.dispatch(setWorkspaceData(workspaceId, workspaceName, this.props.user, this.props.role))
     this.props.dispatch(switchForm(1))
   }
 
@@ -93,5 +92,5 @@ export class WorkspaceForm extends React.Component {
   }
 }
 
-const mapStateToProps = ({ workspace, apiData }) => ({ workspace, selectedWs: apiData.workspace })
+const mapStateToProps = ({ workspace, user, role, apiData }) => ({ workspace, user, role, selectedWs: apiData.workspace })
 export default connect(mapStateToProps)(WorkspaceForm)

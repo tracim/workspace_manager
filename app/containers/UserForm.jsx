@@ -6,23 +6,25 @@ import StatusPicto from '../components/StatusPicto.jsx'
 import findIndex from 'lodash.findindex'
 import RoleForm from './RoleForm.jsx'
 
+const newUserInit = {
+  name: '',
+  email: '',
+  checkEmailStatus: ASYNC_STATUS.INIT,
+  pw: '',
+  canCreateWs: false,
+  isAdmin: false,
+  sendEmailNotif: false
+}
+
 export class UserForm extends React.Component {
   constructor () {
     super()
     this.state = {
+      selectedUser: '',
       formHeight: '0px',
       formMaxHeight: '323px', // magic number equals to the total height of the form (must be updated if form's html change)
       roleFormVisibility: true,
-      newUser: {
-        name: '',
-        checkNameStatus: ASYNC_STATUS.INIT,
-        email: '',
-        checkEmailStatus: ASYNC_STATUS.INIT,
-        pw: '',
-        canCreateWs: false,
-        isAdmin: false,
-        sendEmailNotif: false
-      },
+      newUser: newUserInit,
       nameValid: true,
       emailValid: true
     }
@@ -30,20 +32,18 @@ export class UserForm extends React.Component {
 
   showForm = () => {
     this.state.formHeight === '0px'
-      ? this.setState({...this.state, formHeight: this.state.formMaxHeight, roleFormVisibility: false})
+      ? this.setState({...this.state, selectedUser: '', formHeight: this.state.formMaxHeight, roleFormVisibility: false, newUser: newUserInit})
       : this.setState({...this.state, formHeight: '0px', roleFormVisibility: true})
   }
 
-  assignUser = (userId, userName = '') => {
-    this.setState({...this.state, formHeight: '0px', roleFormVisibility: true})
+  assignUser = (userId) => {
+    this.setState({...this.state, selectedUser: userId, formHeight: '0px', roleFormVisibility: true})
 
     if (userId === '') return
     const intUserId = parseInt(userId)
 
-    if (userName === '') {
-      userName = this.props.user[findIndex(this.props.user, {id: intUserId})].name
-      this.props.dispatch(addUserData(intUserId, userName))
-    }
+    const userName = this.props.user[findIndex(this.props.user, {id: intUserId})].name
+    this.props.dispatch(addUserData(intUserId, userName))
   }
 
   handleClickCheckboxNewUser = (checkboxName) => {
@@ -91,16 +91,7 @@ export class UserForm extends React.Component {
       ...this.state,
       formHeight: '0px',
       roleFormVisibility: true,
-      newUser: {
-        name: '',
-        checkNameStatus: ASYNC_STATUS.INIT,
-        email: '',
-        checkEmailStatus: ASYNC_STATUS.INIT,
-        pw: '',
-        canCreateWs: false,
-        isAdmin: false,
-        sendEmailNotif: false
-      },
+      newUser: newUserInit,
       nameValid: true,
       emailValid: true
     })
@@ -130,7 +121,7 @@ export class UserForm extends React.Component {
               </button>
             </div>
             <div className='col-sm-9'>
-              <select className='form-control' onChange={(e) => this.assignUser(e.target.value)}>
+              <select className='form-control' value={this.state.selectedUser} onChange={(e) => this.assignUser(e.target.value)}>
                 <option value=''>Choisir un utilisateur</option>
                 { user.map((item, i) => <option value={item.id} key={'user_' + i}>{item.name}</option>) }
               </select>

@@ -15,11 +15,11 @@ export class RoleForm extends React.Component {
   }
 
   shouldDisplayRoleForm = () => {
-    this.props.addedUser.length > 0 ? this.props.visible : false
+    this.props.apiData.user.length > 0 ? this.props.visible : false
   }
 
   render () {
-    const shouldDisplayRoleForm = this.props.addedUser.length > 0 ? this.props.visible : false
+    const shouldDisplayRoleForm = this.props.apiData.user.length > 0 ? this.props.visible : false
     return (
       <div className='roleForm' style={{display: shouldDisplayRoleForm ? 'block' : 'none'}}>
         <table className='roleForm__tab'>
@@ -30,13 +30,13 @@ export class RoleForm extends React.Component {
               <th>{ ROLE_LIST.CONTRIBUTOR.label }</th>
               <th>{ ROLE_LIST.CONTENT_MANAGER.label }</th>
               <th>{ ROLE_LIST.WORKSPACE_MANAGER.label }</th>
-              <th>{ ROLE_LIST.SEND_USER_NOTIF.label }</th>
+              <th>{ ROLE_LIST.SUBSCRIBE_USER_NOTIF.label }</th>
             </tr>
-            { this.props.addedUser.map((oneUser, i) =>
-              <tr key={'userRoleKey_' + oneUser.id + '_' + i}>
+            { this.props.apiData.user.map((oneUser, i) =>
+              <tr key={'userRoleKey_' + oneUser.userId + '_' + i}>
                 <td>
                   <div className='roleForm__tab__removeuser__wrapper'>
-                    <div className='roleForm__tab__removeuser' onClick={() => this.props.dispatch(removeUserData(oneUser.id))}>x</div>
+                    <div className='roleForm__tab__removeuser' onClick={() => this.props.dispatch(removeUserData(oneUser.userId))}>x</div>
                   </div>
                   { oneUser.name }
                 </td>
@@ -64,5 +64,5 @@ export class RoleForm extends React.Component {
   }
 }
 
-const mapStateToProps = ({ apiData }) => ({ addedUser: apiData.user })
+const mapStateToProps = ({ apiData }) => ({ apiData })
 export default connect(mapStateToProps)(RoleForm)

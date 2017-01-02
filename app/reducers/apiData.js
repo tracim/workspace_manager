@@ -11,7 +11,15 @@ export default function apiData (state = {
 }, action) {
   switch (action.type) {
     case SET_WS_DATA:
-      return {...state, workspace: { id: action.id, name: action.name }}
+      let tempUser
+      const apiDataUserFromWs = action.roleList.reduce((acc, oneRole) => {
+        if (oneRole.workspaceId === action.id) {
+          tempUser = action.userList.find(oneUser => oneUser.id === oneRole.userId)
+          acc.push({ id: tempUser.id, isNew: false, name: tempUser.name, role: oneRole.roleId, subscribeNotif: oneRole.subscribedNotif })
+        }
+        return acc
+      }, [])
+      return {...state, workspace: { id: action.id, name: action.name }, user: apiDataUserFromWs}
 
     case RESET_USER_DATA:
       return {...state, user: []}

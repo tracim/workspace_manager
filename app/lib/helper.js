@@ -21,7 +21,7 @@ export const ROLE_LIST = {
     id: 8,
     label: 'Responsable'
   },
-  SEND_USER_NOTIF: {
+  SUBSCRIBE_USER_NOTIF: {
     id: 16,
     label: "Abonner l'utilisateur aux notifications"
   }
@@ -32,7 +32,7 @@ export function displayRole (roleID) {
     case ROLE_LIST.CONTRIBUTOR.id: return ROLE_LIST.CONTRIBUTOR.label
     case ROLE_LIST.CONTENT_MANAGER.id: return ROLE_LIST.CONTENT_MANAGER.label
     case ROLE_LIST.WORKSPACE_MANAGER.id: return ROLE_LIST.WORKSPACE_MANAGER.label
-    case ROLE_LIST.SEND_USER_NOTIF.id: return ROLE_LIST.SEND_USER_NOTIF.label
+    case ROLE_LIST.SUBSCRIBE_USER_NOTIF.id: return ROLE_LIST.SUBSCRIBE_USER_NOTIF.label
   }
 }
 

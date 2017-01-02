@@ -72,8 +72,10 @@ $wizardWidth = 868px
   &__view
     position relative
     left 0
-    width $wizardWidth * 3
-    overflow hidden
+    width ($wizardWidth * 3) + 30px // 30px for the right elevator which is hidden
+    max-height 400px
+    overflow-x hidden
+    overflow-y scroll
     transition left 1s
 .workspaceForm, .userForm, .recap
   display inline-block
@@ -142,8 +144,12 @@ $btnRemoveGeneric
       border-right $borderStyle
       vertical-align middle
     th
+      max-width 170px
       padding 8px
       text-align center
+      &:nth-child(1)
+        border-top 1px solid #fff
+        border-left 1px solid #fff
     td:nth-child(1)
       position relative
       max-width 160px

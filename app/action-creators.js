@@ -8,6 +8,8 @@ export const ADD_USER = 'ADD_USER'
 export const UPDATE_USER = 'UPDATE_USER'
 export const REMOVE_USER = 'REMOVE_USER'
 
+export const INIT_ROLE = 'INIT_ROLE'
+
 export const REQUEST_INITDATA_START = 'REQUEST_INITDATA_START'
 export const REQUEST_INITDATA_END = 'REQUEST_INITDATA_END'
 export const REQUEST_CHECKWS_START = 'REQUEST_CHECKWS_START'
@@ -51,6 +53,10 @@ export function removeUser (id) {
   return { type: REMOVE_USER, id }
 }
 
+export function initRole (userRole) {
+  return { type: INIT_ROLE, userRole }
+}
+
 export function requestAsyncInitStart () {
   return { type: REQUEST_INITDATA_START }
 }
@@ -65,8 +71,10 @@ export function fetchConfig (urlJsonCfg) {
     .then(json =>
       Promise.all([ // thoses dispatch will update every parts of the store according to the config got by ajax
         dispatch(initWorkspace(json.workspace)),
-        json.selectedWsId.id !== null && dispatch(setWorkspaceData(json.selectedWsId.id, json.selectedWsId.name)),
-        dispatch(initUser(json.user))
+        json.selectedWs.id !== null && dispatch(setWorkspaceData(json.selectedWs.id, json.selectedWs.name, json.user, json.role)),
+        // if (json.selectedWs.id !== null) && dispatch(assignAllUsersFromWorkspaceData(json.selectedWs.id, json.user, json.role)),
+        dispatch(initUser(json.user)),
+        dispatch(initRole(json.role))
       ])
     )
     .then(() => dispatch(requestAsyncInitEnd())) // set isFetching to false to hide the loader
@@ -81,8 +89,8 @@ export function switchForm (formId) {
   return { type: SWITCH_FORM, formId }
 }
 
-export function setWorkspaceData (id, name) {
-  return { type: SET_WS_DATA, id, name }
+export function setWorkspaceData (id, name, userList, roleList) {
+  return { type: SET_WS_DATA, id, name, userList, roleList }
 }
 export function resetUserData () {
   return { type: RESET_USER_DATA }

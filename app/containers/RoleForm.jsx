@@ -36,7 +36,7 @@ export class RoleForm extends React.Component {
               <tr key={'userRoleKey_' + oneUser.userId + '_' + i}>
                 <td>
                   <div className='roleForm__tab__removeuser__wrapper'>
-                    <div className='roleForm__tab__removeuser' onClick={() => this.props.dispatch(removeUserData(oneUser.userId))}>x</div>
+                    <div className='roleForm__tab__removeuser' onClick={() => this.props.dispatch(removeUserData(oneUser.id))}>x</div>
                   </div>
                   { oneUser.name }
                 </td>

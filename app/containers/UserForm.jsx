@@ -20,7 +20,8 @@ export class UserForm extends React.Component {
   constructor () {
     super()
     this.state = {
-      selectedUser: '',
+      searchedUser: '',
+      matchingUser: [],
       formHeight: '0px',
       formMaxHeight: '323px', // magic number equals to the total height of the form (must be updated if form's html change)
       roleFormVisibility: true,
@@ -36,8 +37,18 @@ export class UserForm extends React.Component {
       : this.setState({...this.state, formHeight: '0px', roleFormVisibility: true})
   }
 
+  handleSearchUser = (e) => {
+    const searchTerm = e.target.value.toLowerCase()
+    const tempMatchinUsers = this.props.user.reduce((acc, oneUser) => {
+      if (oneUser.name.toLowerCase().includes(searchTerm)) acc.push(oneUser)
+      return acc
+    }, [])
+
+    this.setState({...this.state, searchedUser: searchTerm, matchingUser: tempMatchinUsers})
+  }
+
   assignUser = (userId) => {
-    this.setState({...this.state, selectedUser: userId, formHeight: '0px', roleFormVisibility: true})
+    this.setState({...this.state, selectedUser: userId, formHeight: '0px', roleFormVisibility: true, searchedUser: '', matchingUser: []})
 
     if (userId === '') return
     const intUserId = parseInt(userId)
@@ -102,8 +113,8 @@ export class UserForm extends React.Component {
   }
 
   render () {
-    const { user, addedUser, dispatch } = this.props
-    const { newUser, nameValid, emailValid, formHeight, roleFormVisibility } = this.state
+    const { addedUser, dispatch } = this.props
+    const { searchedUser, matchingUser, newUser, nameValid, emailValid, formHeight, roleFormVisibility } = this.state
 
     const canCreateWsClass = newUser.canCreateWs ? ' checked' : ''
     const isAdminClass = newUser.isAdmin ? ' checked' : ''
@@ -119,21 +130,37 @@ export class UserForm extends React.Component {
         <div className='userForm__form'>
 
           <div className='userForm__item form-group'>
-            <div className='col-sm-2'>
+            <div className='col-sm-1'>
               <button className='userForm__backbtn btn' onClick={() => dispatch(switchForm(0))}>
                 <i className='fa fa-chevron-left' />
               </button>
             </div>
-            <div className='col-sm-9'>
+            <div className='col-sm-10'>
+              {/*
               <select className='form-control' value={this.state.selectedUser} onChange={(e) => this.assignUser(e.target.value)}>
                 <option value=''>Choisir un utilisateur</option>
                 { user.map((item, i) => <option value={item.id} key={'user_' + i}>{item.name}</option>) }
               </select>
+              */}
+              <div className='userForm__searchUser'>
+                <input type='text' className='userForm__searchUser__input form-control' id='searchUser' placeholder='Rechercher un utilisateur ...' onChange={this.handleSearchUser} value={searchedUser} />
+                <div className='userForm__searchUser__autocomplete' style={{display: matchingUser.length > 0 ? 'block' : 'none'}}>
+                  { matchingUser.map((oneUser, i) =>
+                    <div className='userForm__searchUser__autocomplete__item' key={'user_' + i} onClick={() => this.assignUser(oneUser.id)}>
+                      {oneUser.name}
+                    </div>
+                  )}
+                </div>
+              </div>
             </div>
           </div>
 
+          <div className='workspaceForm__item__separator form-group'>
+            <div className='col-sm-offset-1 col-sm-10'>Ou</div>
+          </div>
+
           <div className='userForm__item__text-link form-group'>
-            <div className='col-sm-offset-2 col-sm-10'>
+            <div className='col-sm-offset-1 col-sm-10'>
               <span onClick={this.showForm}>Créer un nouvel utilisateur</span>
             </div>
           </div>

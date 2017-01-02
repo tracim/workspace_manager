@@ -1,4 +1,4 @@
-import { SET_WS_DATA, ADD_USER_DATA, RESET_USER_DATA, ADD_NEW_USER_DATA, REMOVE_USER_DATA, UPDATE_USER_ROLE_DATA, UPDATE_USER_EMAILNOTIF_DATA } from '../action-creators.js'
+import { SET_WS_DATA, SET_WS_DESCRIPTION, ADD_USER_DATA, RESET_USER_DATA, ADD_NEW_USER_DATA, REMOVE_USER_DATA, UPDATE_USER_ROLE_DATA, UPDATE_USER_EMAILNOTIF_DATA } from '../action-creators.js'
 import reject from 'lodash.reject'
 import findIndex from 'lodash.findindex'
 import { ROLE_LIST, generateNewUserId } from '../lib/helper.js'
@@ -19,7 +19,10 @@ export default function apiData (state = {
         }
         return acc
       }, [])
-      return {...state, workspace: { id: action.id, name: action.name }, user: apiDataUserFromWs}
+      return {...state, workspace: {...state.workspace, id: action.id, name: action.name}, user: apiDataUserFromWs}
+
+    case SET_WS_DESCRIPTION:
+      return {...state, workspace: {...state.workspace, description: action.description}}
 
     case RESET_USER_DATA:
       return {...state, user: []}

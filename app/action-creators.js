@@ -20,6 +20,7 @@ export const REQUEST_CHECKUSER_END = 'REQUEST_CHECKUSER_END'
 export const SWITCH_FORM = 'SWITCH_FORM'
 
 export const SET_WS_DATA = 'SET_WS_DATA'
+export const SET_WS_DESCRIPTION = 'SET_WS_DESCRIPTION'
 export const RESET_USER_DATA = 'RESET_USER_DATA'
 export const ADD_USER_DATA = 'ADD_USER_DATA'
 export const ADD_NEW_USER_DATA = 'ADD_NEW_USER_DATA'
@@ -72,7 +73,6 @@ export function fetchConfig (urlJsonCfg) {
       Promise.all([ // thoses dispatch will update every parts of the store according to the config got by ajax
         dispatch(initWorkspace(json.workspace)),
         json.selectedWs.id !== null && dispatch(setWorkspaceData(json.selectedWs.id, json.selectedWs.name, json.user, json.role)),
-        // if (json.selectedWs.id !== null) && dispatch(assignAllUsersFromWorkspaceData(json.selectedWs.id, json.user, json.role)),
         dispatch(initUser(json.user)),
         dispatch(initRole(json.role))
       ])
@@ -91,6 +91,9 @@ export function switchForm (formId) {
 
 export function setWorkspaceData (id, name, userList, roleList) {
   return { type: SET_WS_DATA, id, name, userList, roleList }
+}
+export function setWorkspaceDescription (description) {
+  return { type: SET_WS_DESCRIPTION, description }
 }
 export function resetUserData () {
   return { type: RESET_USER_DATA }

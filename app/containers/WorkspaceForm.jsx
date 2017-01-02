@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { switchForm, setWorkspaceData } from '../action-creators.js'
+import { switchForm, setWorkspaceData, setWorkspaceDescription } from '../action-creators.js'
 import StatusPicto from '../components/StatusPicto.jsx'
 import { ASYNC_STATUS, WS_RESERVED_ID } from '../lib/helper.js'
 
@@ -10,7 +10,7 @@ export class WorkspaceForm extends React.Component {
 
     this.state = {
       formHeight: '0px',
-      formMaxHeight: '49px', // magic number equals to the total height of the form (must be updated if form's html change)
+      formMaxHeight: '98px', // magic number equals to the total height of the form (must be updated if form's html change)
       checkWsStatus: ASYNC_STATUS.INIT
     }
   }
@@ -33,6 +33,7 @@ export class WorkspaceForm extends React.Component {
   }
 
   handleChangeWsName = (e) => {
+    e.persist()
     this.setState({...this.state, checkWsStatus: ASYNC_STATUS.IN_PROGRESS})
 
     fetch('/temp_check_async.json', {
@@ -40,8 +41,15 @@ export class WorkspaceForm extends React.Component {
       headers: { 'Accept': 'application/json' }
     })
     .then(response => response.json())
-    .then(json => this.setState({...this.state, checkWsStatus: json.response}))
+    .then(json => {
+      this.setState({...this.state, checkWsStatus: json.can_be_used === true ? ASYNC_STATUS.OK : ASYNC_STATUS.ERROR})
+      this.props.dispatch(setWorkspaceData(WS_RESERVED_ID.NEW_WS, e.target.value, [], []))
+    })
     .catch((e) => console.log('Error fetching workspace', e))
+  }
+
+  handleChangeWsDesc = (e) => {
+    this.props.dispatch(setWorkspaceDescription(e.target.value))
   }
 
   render () {
@@ -73,12 +81,19 @@ export class WorkspaceForm extends React.Component {
 
         <div className='workspaceForm__wrapper-hidden' style={{height: this.state.formHeight}}>
           <div className='workspaceForm__item  form-group'>
-            <label className='col-sm-2 control-label' htmlFor='newWs'>Nom : </label>
+            <label className='col-sm-2 control-label' htmlFor='newWsName'>Nom : </label>
             <div className='col-sm-9'>
-              <input type='text' className='form-control' id='newWs' onChange={this.handleChangeWsName} />
+              <input type='text' className='form-control' id='newWsName' onChange={this.handleChangeWsName} />
             </div>
             <div className='workspaceForm__wrapper-hidden__picto col-sm-1'>
               <StatusPicto status={this.state.checkWsStatus} />
+            </div>
+          </div>
+
+          <div className='workspaceForm__item  form-group'>
+            <label className='col-sm-2 control-label' htmlFor='newWsDesc'>Description : </label>
+            <div className='col-sm-9'>
+              <input type='text' className='form-control' id='newWsDesc' onChange={this.handleChangeWsDesc} />
             </div>
           </div>
         </div>

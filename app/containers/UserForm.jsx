@@ -51,11 +51,18 @@ export class UserForm extends React.Component {
   }
 
   handleChangeEmailInput = (e) => {
+    const newEmail = e.target.value
+
+    if (newEmail === '' || newEmail.indexOf('@') === -1 || newEmail.indexOf('.') === -1) {
+      this.setState({...this.state, emailValid: false, newUser: {...this.state.newUser, email: newEmail}})
+      return
+    }
+
     this.setState({
       ...this.state,
       newUser: {
         ...this.state.newUser,
-        email: e.target.value,
+        email: newEmail,
         checkEmailStatus: ASYNC_STATUS.IN_PROGRESS
       }
     })
@@ -65,7 +72,7 @@ export class UserForm extends React.Component {
       headers: { 'Accept': 'application/json' }
     })
     .then(response => response.json())
-    .then(json => this.setState({...this.state, newUser: {...this.state.newUser, checkEmailStatus: json.response}}))
+    .then(json => this.setState({...this.state, emailValid: true, newUser: {...this.state.newUser, checkEmailStatus: json.can_be_used === true ? ASYNC_STATUS.OK : ASYNC_STATUS.ERROR}}))
     .catch((e) => console.log('Error fetching user data', e))
   }
 
@@ -80,10 +87,7 @@ export class UserForm extends React.Component {
   handleClickAddNewUser = () => {
     const { name, email, pw, canCreateWs, isAdmin, sendEmailNotif } = this.state.newUser
 
-    if (name === '' || email === '') {
-      this.setState({...this.state, nameValid: name !== '', emailValid: email !== ''})
-      return
-    }
+    if (name === '' || email === '' || this.state.nameValid === false || this.state.emailValid === false) return
 
     this.props.dispatch(addNewUserData(name, email, pw, canCreateWs, isAdmin, sendEmailNotif))
 

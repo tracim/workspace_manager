@@ -5,7 +5,7 @@ module.exports = {
   entry: ['babel-polyfill', 'whatwg-fetch', './app/app.jsx'],
   output: {
     path: 'dist',
-    filename: 'bundle.js',
+    filename: 'workspace_manager_bundle.js',
   },
   watch: isProduction ? false : true,
   module: {

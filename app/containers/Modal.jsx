@@ -10,7 +10,7 @@ export class Modal extends React.Component {
         <div className='modal-dialog modal-lg' role='document'>
           <div className='modal-content'>
             <div className='modal-header'>
-              <button type='button' className='close' data-dismiss='modal' aria-label='Close' onClick={null}>
+              <button type='button' className='close' id='modalWorkspaceManagerBtnClose' data-dismiss='modal' aria-label='Close'>
                 <span aria-hidden='true'>&times;</span>
               </button>
               <h4 className='modal-title'>Workspace manager</h4>

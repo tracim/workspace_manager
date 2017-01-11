@@ -10,7 +10,7 @@ const defaultStore = {
   isFetching: false
 }
 
-const configPath = document.getElementById('content').getAttribute('configPath')
+const configPath = document.getElementById('workspace_manager').getAttribute('configPath')
 
 export const store = ((middleware, reduxDevTools) =>
   configPath !== ''

@@ -33,7 +33,7 @@ export class WorkspaceForm extends React.Component {
   }
 
   handleChangeWsName = (e) => {
-    e.persist()
+    const newWsName = e.target.value
     this.setState({...this.state, checkWsStatus: ASYNC_STATUS.IN_PROGRESS})
 
     fetch('/temp_check_async.json', {
@@ -43,7 +43,7 @@ export class WorkspaceForm extends React.Component {
     .then(response => response.json())
     .then(json => {
       this.setState({...this.state, checkWsStatus: json.can_be_used === true ? ASYNC_STATUS.OK : ASYNC_STATUS.ERROR})
-      this.props.dispatch(setWorkspaceData(WS_RESERVED_ID.NEW_WS, e.target.value, [], []))
+      this.props.dispatch(setWorkspaceData(WS_RESERVED_ID.NEW_WS, newWsName, [], []))
     })
     .catch((e) => console.log('Error fetching workspace', e))
   }

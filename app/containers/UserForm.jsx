@@ -64,7 +64,7 @@ export class UserForm extends React.Component {
   handleChangeEmailInput = (e) => {
     const newEmail = e.target.value
 
-    if (newEmail === '' || newEmail.indexOf('@') === -1 || newEmail.indexOf('.') === -1) {
+    if (newEmail === '' || newEmail.includes('@') === false || newEmail.includes('.') === false) {
       this.setState({...this.state, emailValid: false, newUser: {...this.state.newUser, email: newEmail}})
       return
     }

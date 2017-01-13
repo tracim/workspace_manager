@@ -4,6 +4,7 @@ import RoleInput from '../components/RoleInput.jsx'
 import SubscribeNotifInput from '../components/SubscribeNotifInput.jsx'
 import { removeUserData, updateUserRoleData, updateUserSubscribeNotifData } from '../action-creators.js'
 import { ROLE_LIST } from '../lib/helper.js'
+import __ from '../trad.js'
 
 export class RoleForm extends React.Component {
   handleChangeRole = (userId, roleId) => {
@@ -26,11 +27,11 @@ export class RoleForm extends React.Component {
           <tbody>
             <tr>
               <th />
-              <th>{ ROLE_LIST.READER.label }</th>
-              <th>{ ROLE_LIST.CONTRIBUTOR.label }</th>
-              <th>{ ROLE_LIST.CONTENT_MANAGER.label }</th>
-              <th>{ ROLE_LIST.WORKSPACE_MANAGER.label }</th>
-              <th>{ ROLE_LIST.SUBSCRIBE_USER_NOTIF.label }</th>
+              <th>{ __(ROLE_LIST.READER.label) }</th>
+              <th>{ __(ROLE_LIST.CONTRIBUTOR.label) }</th>
+              <th>{ __(ROLE_LIST.CONTENT_MANAGER.label) }</th>
+              <th>{ __(ROLE_LIST.WORKSPACE_MANAGER.label) }</th>
+              <th>{ __(ROLE_LIST.SUBSCRIBE_USER_NOTIF.label) }</th>
             </tr>
             { this.props.apiData.user.map((oneUser, i) =>
               <tr key={'userRoleKey_' + oneUser.userId + '_' + i}>

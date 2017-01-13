@@ -1,10 +1,12 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import Collapse from 'react-collapse'
 import { switchForm, addUserData, addNewUserData } from '../action-creators.js'
 import { ASYNC_STATUS } from '../lib/helper.js'
 import StatusPicto from '../components/StatusPicto.jsx'
 import findIndex from 'lodash.findindex'
 import RoleForm from './RoleForm.jsx'
+import __ from '../trad.js'
 
 const newUserInit = {
   name: '',
@@ -113,7 +115,7 @@ export class UserForm extends React.Component {
   }
 
   render () {
-    const { addedUser, dispatch } = this.props
+    const { activeForm, addedUser, dispatch } = this.props
     const { searchedUser, matchingUser, newUser, nameValid, emailValid, formHeight, roleFormVisibility } = this.state
 
     const canCreateWsClass = newUser.canCreateWs ? ' checked' : ''
@@ -125,8 +127,7 @@ export class UserForm extends React.Component {
     const isBtnNextAllowed = (addedUser.length >= 1)
 
     return (
-      <div className='userForm form-horizontal'>
-
+      <Collapse isOpened={activeForm === 1} keepCollapsedContent className='userForm form-horizontal' springConfig={{stiffness: 190, damping: 30}}>
         <div className='userForm__form'>
 
           <div className='userForm__item form-group'>
@@ -161,23 +162,23 @@ export class UserForm extends React.Component {
 
           <div className='userForm__item__text-link form-group'>
             <div className='col-sm-offset-1 col-sm-10'>
-              <span onClick={this.showForm}>Créer un nouvel utilisateur</span>
+              <span onClick={this.showForm}>{ roleFormVisibility ? __('create a new user') : __('cancel') }</span>
             </div>
           </div>
 
           <div className='userForm__wrapper-hidden' style={{height: formHeight}}>
 
             <div className={'userForm__item form-group' + isNameValid}>
-              <label className='col-sm-2 control-label' htmlFor='newUserName'>Nom : </label>
+              <label className='col-sm-2 control-label' htmlFor='newUserName'>{__('name')}</label>
               <div className='col-sm-8'>
-                <input type='text' className='form-control' id='newUserName' placeholder='Nom' onChange={this.handleChangeNameInput} value={newUser.name} />
+                <input type='text' className='form-control' id='newUserName' placeholder={__('name')} onChange={this.handleChangeNameInput} value={newUser.name} />
               </div>
             </div>
 
             <div className={'userForm__item form-group' + isEmailValid}>
-              <label className='col-sm-2 control-label' htmlFor='newUserEmail'>Email : </label>
+              <label className='col-sm-2 control-label' htmlFor='newUserEmail'>{__('email')}</label>
               <div className='col-sm-8'>
-                <input type='text' className='form-control' id='newUserEmail' placeholder='Email' onChange={this.handleChangeEmailInput} value={newUser.email} />
+                <input type='text' className='form-control' id='newUserEmail' placeholder={__('email')} onChange={this.handleChangeEmailInput} value={newUser.email} />
               </div>
               <div className='userForm__wrapper-hidden__picto col-sm-1'>
                 <StatusPicto status={newUser.checkEmailStatus} />
@@ -185,9 +186,9 @@ export class UserForm extends React.Component {
             </div>
 
             <div className='userForm__item form-group'>
-              <label className='col-sm-2 control-label' htmlFor='newUserPasssword'>Mot de passe : </label>
+              <label className='col-sm-2 control-label' htmlFor='newUserPasssword'>{__('password')}</label>
               <div className='col-sm-8'>
-                <input type='password' className='form-control' id='newUserPasssword' placeholder='Mot de passe (facultatif)' onChange={this.handleChangePwInput} value={newUser.pw} />
+                <input type='password' className='form-control' id='newUserPasssword' placeholder={__('password optional')} onChange={this.handleChangePwInput} value={newUser.pw} />
               </div>
             </div>
 
@@ -195,7 +196,7 @@ export class UserForm extends React.Component {
               <div className='userForm__item checkbox'>
                 <label className={'customCheckbox' + canCreateWsClass} htmlFor='newUserCanCreateWs'>
                   <input type='checkbox' id='newUserCanCreateWs' onClick={() => this.handleClickCheckboxNewUser('canCreateWs')} value={newUser.canCreateWs} />
-                  Cet utilisateur peut créer des espaces de travail
+                  {__('this user can create workspace')}
                 </label>
               </div>
             </div>
@@ -204,7 +205,7 @@ export class UserForm extends React.Component {
               <div className='userForm__item checkbox'>
                 <label className={'customCheckbox' + isAdminClass} htmlFor='newUserIsAdmin'>
                   <input type='checkbox' id='newUserIsAdmin' onClick={() => this.handleClickCheckboxNewUser('isAdmin')} value={newUser.isAdmin} />
-                  Cet utilisateur est un administrateur
+                  {__('this user is admin')}
                 </label>
               </div>
             </div>
@@ -213,13 +214,13 @@ export class UserForm extends React.Component {
               <div className='userForm__item checkbox'>
                 <label className={'customCheckbox' + sendEmailNotifClass} htmlFor='newUserSendEmailNotif'>
                   <input type='checkbox' id='newUserSendEmailNotif' onClick={() => this.handleClickCheckboxNewUser('sendEmailNotif')} value={newUser.sendEmailNotif} />
-                  Notifier par mail l'utilisateur de la création de son compte
+                  {__('notify by email the user about his account creation')}
                 </label>
               </div>
             </div>
 
             <button className='col-sm-offset-9 col-sm-2 btn' onClick={this.handleClickAddNewUser}>
-              Ajouter
+              {__('add')}
             </button>
 
           </div>
@@ -228,14 +229,15 @@ export class UserForm extends React.Component {
 
         <RoleForm visible={roleFormVisibility} />
 
-        <button className='userForm__nextbtn btn' onClick={() => dispatch(switchForm(2))} disabled={!isBtnNextAllowed}>
-          <i className='fa fa-chevron-right' />
-        </button>
-
-      </div>
+        <div className='userForm__nextbtn'>
+          <button className='userForm__nextbtn__btn btn' onClick={() => dispatch(switchForm(2))} disabled={!isBtnNextAllowed}>
+            <i className='fa fa-chevron-right' />
+          </button>
+        </div>
+      </Collapse>
     )
   }
 }
 
-const mapStateToProps = ({ user, apiData }) => ({ user, addedUser: apiData.user })
+const mapStateToProps = ({ activeForm, user, apiData }) => ({ activeForm, user, addedUser: apiData.user })
 export default connect(mapStateToProps)(UserForm)

@@ -1,8 +1,10 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import Collapse from 'react-collapse'
 import { switchForm, setWorkspaceData, setWorkspaceDescription } from '../action-creators.js'
 import StatusPicto from '../components/StatusPicto.jsx'
 import { ASYNC_STATUS, WS_RESERVED_ID } from '../lib/helper.js'
+import __ from '../trad.js'
 
 export class WorkspaceForm extends React.Component {
   constructor () {
@@ -53,35 +55,34 @@ export class WorkspaceForm extends React.Component {
   }
 
   render () {
-    const { workspace, selectedWs, dispatch } = this.props
+    const { activeForm, workspace, selectedWs, dispatch } = this.props
 
     const isBtnNextAllowed = (selectedWs.id !== WS_RESERVED_ID.NO_WS_SELECTED && selectedWs.id !== WS_RESERVED_ID.NEW_WS) || this.state.checkWsStatus === ASYNC_STATUS.OK
 
     return (
-      <div className='workspaceForm form-horizontal'>
-
+      <Collapse isOpened={activeForm === 0} keepCollapsedContent className='workspaceForm form-horizontal' springConfig={{stiffness: 190, damping: 30}}>
         <div className='workspaceForm__item form-group'>
           <div className='col-sm-offset-1 col-sm-10'>
             <select className='form-control' value={selectedWs.id} onChange={this.handleAssignWorkspace}>
-              <option value={WS_RESERVED_ID.NO_WS_SELECTED}>Choisir un workspace</option>
+              <option value={WS_RESERVED_ID.NO_WS_SELECTED}>{ __('choose a workspace') }</option>
               { workspace.map((item, i) => <option value={item.id} key={'ws_' + i}>{item.name}</option>) }
             </select>
           </div>
         </div>
 
         <div className='workspaceForm__item__separator form-group'>
-          <div className='col-sm-offset-1 col-sm-10'>Ou</div>
+          <div className='col-sm-offset-1 col-sm-10'>{ __('or') }</div>
         </div>
 
         <div className='workspaceForm__item__text-link form-group'>
           <div className='col-sm-offset-1 col-sm-10'>
-            <span onClick={this.handleShowForm}>Créer un nouveau workspace</span>
+            <span onClick={this.handleShowForm}>{ __('create a new workspace') }</span>
           </div>
         </div>
 
         <div className='workspaceForm__wrapper-hidden' style={{height: this.state.formHeight}}>
           <div className='workspaceForm__item  form-group'>
-            <label className='col-sm-2 control-label' htmlFor='newWsName'>Nom : </label>
+            <label className='col-sm-2 control-label' htmlFor='newWsName'>{ __('name') }</label>
             <div className='col-sm-9'>
               <input type='text' className='form-control' id='newWsName' onChange={this.handleChangeWsName} />
             </div>
@@ -91,21 +92,22 @@ export class WorkspaceForm extends React.Component {
           </div>
 
           <div className='workspaceForm__item  form-group'>
-            <label className='col-sm-2 control-label' htmlFor='newWsDesc'>Description : </label>
+            <label className='col-sm-2 control-label' htmlFor='newWsDesc'>{ __('description') }</label>
             <div className='col-sm-9'>
               <input type='text' className='form-control' id='newWsDesc' onChange={this.handleChangeWsDesc} />
             </div>
           </div>
         </div>
 
-        <button className='workspaceForm__nextbtn btn' onClick={() => dispatch(switchForm(1))} disabled={!isBtnNextAllowed}>
-          <i className='fa fa-chevron-right' />
-        </button>
-
-      </div>
+        <div className='workspaceForm__nextbtn'>
+          <button className='workspaceForm__nextbtn__btn btn' onClick={() => dispatch(switchForm(1))} disabled={!isBtnNextAllowed}>
+            <i className='fa fa-chevron-right' />
+          </button>
+        </div>
+      </Collapse>
     )
   }
 }
 
-const mapStateToProps = ({ workspace, user, role, apiData }) => ({ workspace, user, role, selectedWs: apiData.workspace })
+const mapStateToProps = ({ activeForm, workspace, user, role, apiData }) => ({ activeForm, workspace, user, role, selectedWs: apiData.workspace })
 export default connect(mapStateToProps)(WorkspaceForm)

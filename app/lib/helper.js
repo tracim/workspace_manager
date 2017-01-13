@@ -7,23 +7,23 @@ export const ROLE_LIST = {
   },
   READER: {
     id: 1,
-    label: 'Lecteur'
+    label: 'reader'
   },
   CONTRIBUTOR: {
     id: 2,
-    label: 'Contributeur'
+    label: 'contributor'
   },
   CONTENT_MANAGER: {
     id: 4,
-    label: 'Gestionnaire de contenu'
+    label: 'content manager'
   },
   WORKSPACE_MANAGER: {
     id: 8,
-    label: 'Responsable'
+    label: 'workspace manager'
   },
   SUBSCRIBE_USER_NOTIF: {
     id: 16,
-    label: "Abonner l'utilisateur aux notifications"
+    label: 'subscribe user to notifications'
   }
 }
 export function displayRole (roleID) {

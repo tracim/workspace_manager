@@ -3,6 +3,9 @@
   display block
   height 0
   clear both
+.form-group
+  margin-bottom 0px
+  padding-bottom 15px
 .customRadio
   width 100%
   margin 0
@@ -73,6 +76,7 @@ $wizardWidth = 868px
     position relative
     left 0
     width ($wizardWidth * 3) + 30px // 30px for the right elevator which is hidden
+    min-height 170px
     max-height 400px
     overflow-x hidden
     overflow-y scroll
@@ -81,6 +85,8 @@ $wizardWidth = 868px
   display inline-block
   vertical-align top
   width $wizardWidth
+  overflow hidden
+  min-height 170px
   &__item
     &__separator
       font-weight bold
@@ -91,13 +97,14 @@ $wizardWidth = 868px
         text-decoration underline
   &__wrapper-hidden
     overflow hidden
-    transition height 0.3s
+    // transition height 0.3s
     &__picto
       width 25px
       margin-top 5px
   &__nextbtn
-    float right
-    margin 15px 3px 0 0
+    text-align right
+    &__btn
+      margin 15px 3px 0 0
 .userForm
   &__backbtn
     margin 0 0 0 3px
@@ -117,9 +124,6 @@ $wizardWidth = 868px
         &:hover
           background-color #1a0dab
           color #fff
-  &__form
-    display inline-block
-    vertical-align top
   &__item
     .customCheckbox
       & > input:before
@@ -177,14 +181,13 @@ $btnRemoveGeneric
         .roleForm__tab__removeuser
           left 0px
 .recap
-  padding 15px
   &__title
     font-size 16px
     font-weight bold
   &__subtitle
     padding 10px 0 0 15px
     text-decoration underline
-  &__nextbtn
+  &__nextbtn__btn
     padding 5px 20px
     font-size 20px
     i

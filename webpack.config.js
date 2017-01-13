@@ -32,6 +32,9 @@ module.exports = {
         test: /\.styl$/,
         loader: 'style-loader!css-loader!stylus-loader', // loaders order apply from right to left
       }, {
+        test: /\.json$/,
+        loader: 'json-loader',
+      }, {
         test: /\.png$/,
         loader: 'url-loader?mimetype=image/png&limit=100000',
       }, {

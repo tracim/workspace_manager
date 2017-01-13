@@ -1,5 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import __ from '../trad.js'
 
 import Wizard from './Wizard.jsx'
 
@@ -13,7 +14,7 @@ export class Modal extends React.Component {
               <button type='button' className='close' id='modalWorkspaceManagerBtnClose' data-dismiss='modal' aria-label='Close'>
                 <span aria-hidden='true'>&times;</span>
               </button>
-              <h4 className='modal-title'>Workspace manager</h4>
+              <h4 className='modal-title'>{__('workspace manager')}</h4>
             </div>
             <div className='modal-body'>
 

@@ -1,4 +1,4 @@
-import { REQUEST_INITDATA_START, REQUEST_INITDATA_END } from '../action-creators.js' // , REQUEST_CHECKWS_START, REQUEST_CHECKWS_END, REQUEST_CHECKUSER_START, REQUEST_CHECKUSER_END
+import { REQUEST_INITDATA_START, REQUEST_INITDATA_END } from '../action-creators.js'
 
 export default function isFetching (state = {
   initData: false

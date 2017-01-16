@@ -10,7 +10,7 @@ export const REMOVE_USER = 'REMOVE_USER'
 
 export const INIT_ROLE = 'INIT_ROLE'
 
-export const CHANGE_LANG = 'CHANGE_LANG'
+export const SET_TRACIM_CONFIG = 'SET_TRACIM_CONFIG'
 
 export const REQUEST_INITDATA_START = 'REQUEST_INITDATA_START'
 export const REQUEST_INITDATA_END = 'REQUEST_INITDATA_END'
@@ -60,8 +60,8 @@ export function initRole (userRole) {
   return { type: INIT_ROLE, userRole }
 }
 
-export function changeLang (lang) {
-  return { type: CHANGE_LANG, lang }
+export function setTracimConfig (tracimConfig) {
+  return { type: SET_TRACIM_CONFIG, tracimConfig }
 }
 
 export function requestAsyncInitStart () {
@@ -77,7 +77,7 @@ export function fetchConfig (urlJsonCfg) {
     .then(response => response.json())
     .then(json =>
       Promise.all([ // thoses dispatch will update every parts of the store according to the config got by ajax
-        dispatch(changeLang(json.lang)),
+        dispatch(setTracimConfig(json.tracimConfig)),
         dispatch(initWorkspace(json.workspace)),
         json.selectedWs.id !== null && dispatch(setWorkspaceData(json.selectedWs.id, json.selectedWs.name, json.user, json.role)),
         dispatch(initUser(json.user)),

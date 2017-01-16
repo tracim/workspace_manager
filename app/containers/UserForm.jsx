@@ -122,7 +122,7 @@ export class UserForm extends React.Component {
   }
 
   render () {
-    const { activeForm, addedUser, dispatch } = this.props
+    const { tracimConfig, activeForm, addedUser, dispatch } = this.props
     const { searchedUser, matchingUser, newUser, nameValid, emailValid, formHeight, roleFormVisibility } = this.state
 
     const canCreateWsClass = newUser.canCreateWs ? ' checked' : ''
@@ -163,74 +163,78 @@ export class UserForm extends React.Component {
             </div>
           </div>
 
-          <div className='workspaceForm__item__separator form-group'>
-            <div className='col-sm-offset-1 col-sm-10'>Ou</div>
-          </div>
+          { tracimConfig.canCreateUser && (
+            <div className='workspaceForm__formwrapper'>
 
-          <div className='userForm__item__text-link form-group'>
-            <div className='col-sm-offset-1 col-sm-10'>
-              <span onClick={this.showForm}>{ roleFormVisibility ? __('create a new user') : __('cancel') }</span>
-            </div>
-          </div>
+              <div className='workspaceForm__item__separator form-group'>
+                <div className='col-sm-offset-1 col-sm-10'>{__('or')}</div>
+              </div>
 
-          <div className='userForm__wrapper-hidden' style={{height: formHeight}}>
+              <div className='userForm__item__text-link form-group'>
+                <div className='col-sm-offset-1 col-sm-10'>
+                  <span onClick={this.showForm}>{ roleFormVisibility ? __('create a new user') : __('cancel') }</span>
+                </div>
+              </div>
 
-            <div className={'userForm__item form-group' + isNameValid}>
-              <label className='col-sm-2 control-label' htmlFor='newUserName'>{__('name')}</label>
-              <div className='col-sm-8'>
-                <input type='text' className='form-control' id='newUserName' placeholder={__('name')} onChange={this.handleChangeNameInput} value={newUser.name} />
+              <div className='userForm__wrapper-hidden' style={{height: formHeight}}>
+
+                <div className={'userForm__item form-group' + isNameValid}>
+                  <label className='col-sm-2 control-label' htmlFor='newUserName'>{__('name')}</label>
+                  <div className='col-sm-9'>
+                    <input type='text' className='form-control' id='newUserName' placeholder={__('name')} onChange={this.handleChangeNameInput} value={newUser.name} />
+                  </div>
+                </div>
+
+                <div className={'userForm__item form-group' + isEmailValid}>
+                  <label className='col-sm-2 control-label' htmlFor='newUserEmail'>{__('email')}</label>
+                  <div className='col-sm-9'>
+                    <input type='text' className='form-control' id='newUserEmail' placeholder={__('email')} onChange={this.handleChangeEmailInput} value={newUser.email} />
+                  </div>
+                  <div className='userForm__wrapper-hidden__picto col-sm-1'>
+                    <StatusPicto status={newUser.checkEmailStatus} />
+                  </div>
+                </div>
+
+                <div className='userForm__item form-group'>
+                  <label className='col-sm-2 control-label' htmlFor='newUserPasssword'>{__('password')}</label>
+                  <div className='col-sm-9'>
+                    <input type='password' className='form-control' id='newUserPasssword' placeholder={__('password optional')} onChange={this.handleChangePwInput} value={newUser.pw} />
+                  </div>
+                </div>
+
+                <div className='col-sm-offset-2 col-sm-9'>
+                  <div className='userForm__item checkbox'>
+                    <label className={'customCheckbox' + canCreateWsClass} htmlFor='newUserCanCreateWs'>
+                      <input type='checkbox' id='newUserCanCreateWs' onClick={() => this.handleClickCheckboxNewUser('canCreateWs')} value={newUser.canCreateWs} />
+                      {__('this user can create workspace')}
+                    </label>
+                  </div>
+                </div>
+
+                <div className='col-sm-offset-2 col-sm-9'>
+                  <div className='userForm__item checkbox'>
+                    <label className={'customCheckbox' + isAdminClass} htmlFor='newUserIsAdmin'>
+                      <input type='checkbox' id='newUserIsAdmin' onClick={() => this.handleClickCheckboxNewUser('isAdmin')} value={newUser.isAdmin} />
+                      {__('this user is admin')}
+                    </label>
+                  </div>
+                </div>
+
+                <div className='col-sm-offset-2 col-sm-9'>
+                  <div className='userForm__item checkbox'>
+                    <label className={'customCheckbox' + sendEmailNotifClass} htmlFor='newUserSendEmailNotif'>
+                      <input type='checkbox' id='newUserSendEmailNotif' onClick={() => this.handleClickSendEmailNotif()} value={newUser.config.sendEmailNotif} />
+                      {__('notify by email the user about his account creation')}
+                    </label>
+                  </div>
+                </div>
+
+                <button className='col-sm-offset-9 col-sm-2 btn' onClick={this.handleClickAddNewUser}>
+                  {__('add')}
+                </button>
               </div>
             </div>
-
-            <div className={'userForm__item form-group' + isEmailValid}>
-              <label className='col-sm-2 control-label' htmlFor='newUserEmail'>{__('email')}</label>
-              <div className='col-sm-8'>
-                <input type='text' className='form-control' id='newUserEmail' placeholder={__('email')} onChange={this.handleChangeEmailInput} value={newUser.email} />
-              </div>
-              <div className='userForm__wrapper-hidden__picto col-sm-1'>
-                <StatusPicto status={newUser.checkEmailStatus} />
-              </div>
-            </div>
-
-            <div className='userForm__item form-group'>
-              <label className='col-sm-2 control-label' htmlFor='newUserPasssword'>{__('password')}</label>
-              <div className='col-sm-8'>
-                <input type='password' className='form-control' id='newUserPasssword' placeholder={__('password optional')} onChange={this.handleChangePwInput} value={newUser.pw} />
-              </div>
-            </div>
-
-            <div className='col-sm-offset-2 col-sm-9'>
-              <div className='userForm__item checkbox'>
-                <label className={'customCheckbox' + canCreateWsClass} htmlFor='newUserCanCreateWs'>
-                  <input type='checkbox' id='newUserCanCreateWs' onClick={() => this.handleClickCheckboxNewUser('canCreateWs')} value={newUser.canCreateWs} />
-                  {__('this user can create workspace')}
-                </label>
-              </div>
-            </div>
-
-            <div className='col-sm-offset-2 col-sm-9'>
-              <div className='userForm__item checkbox'>
-                <label className={'customCheckbox' + isAdminClass} htmlFor='newUserIsAdmin'>
-                  <input type='checkbox' id='newUserIsAdmin' onClick={() => this.handleClickCheckboxNewUser('isAdmin')} value={newUser.isAdmin} />
-                  {__('this user is admin')}
-                </label>
-              </div>
-            </div>
-
-            <div className='col-sm-offset-2 col-sm-9'>
-              <div className='userForm__item checkbox'>
-                <label className={'customCheckbox' + sendEmailNotifClass} htmlFor='newUserSendEmailNotif'>
-                  <input type='checkbox' id='newUserSendEmailNotif' onClick={() => this.handleClickSendEmailNotif()} value={newUser.config.sendEmailNotif} />
-                  {__('notify by email the user about his account creation')}
-                </label>
-              </div>
-            </div>
-
-            <button className='col-sm-offset-9 col-sm-2 btn' onClick={this.handleClickAddNewUser}>
-              {__('add')}
-            </button>
-
-          </div>
+          )}
 
         </div>
 
@@ -246,5 +250,5 @@ export class UserForm extends React.Component {
   }
 }
 
-const mapStateToProps = ({ activeForm, user, apiData }) => ({ activeForm, user, addedUser: apiData.user })
+const mapStateToProps = ({ tracimConfig, activeForm, user, apiData }) => ({ tracimConfig, activeForm, user, addedUser: apiData.user })
 export default connect(mapStateToProps)(UserForm)

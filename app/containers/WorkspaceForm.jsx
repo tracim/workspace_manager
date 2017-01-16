@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import Collapse from 'react-collapse'
 import { switchForm, setWorkspaceData, setWorkspaceDescription } from '../action-creators.js'
-import StatusPicto from '../components/StatusPicto.jsx'
+import NewWorkspaceForm from '../components/NewWorkspaceForm.jsx'
 import { ASYNC_STATUS, WS_RESERVED_ID } from '../lib/helper.js'
 import __ from '../trad.js'
 
@@ -55,7 +55,7 @@ export class WorkspaceForm extends React.Component {
   }
 
   render () {
-    const { activeForm, workspace, selectedWs, dispatch } = this.props
+    const { tracimConfig, activeForm, workspace, selectedWs, dispatch } = this.props
 
     const isBtnNextAllowed = (selectedWs.id !== WS_RESERVED_ID.NO_WS_SELECTED && selectedWs.id !== WS_RESERVED_ID.NEW_WS) || this.state.checkWsStatus === ASYNC_STATUS.OK
 
@@ -70,34 +70,14 @@ export class WorkspaceForm extends React.Component {
           </div>
         </div>
 
-        <div className='workspaceForm__item__separator form-group'>
-          <div className='col-sm-offset-1 col-sm-10'>{ __('or') }</div>
-        </div>
-
-        <div className='workspaceForm__item__text-link form-group'>
-          <div className='col-sm-offset-1 col-sm-10'>
-            <span onClick={this.handleShowForm}>{ __('create a new workspace') }</span>
-          </div>
-        </div>
-
-        <div className='workspaceForm__wrapper-hidden' style={{height: this.state.formHeight}}>
-          <div className='workspaceForm__item  form-group'>
-            <label className='col-sm-2 control-label' htmlFor='newWsName'>{ __('name') }</label>
-            <div className='col-sm-9'>
-              <input type='text' className='form-control' id='newWsName' onChange={this.handleChangeWsName} />
-            </div>
-            <div className='workspaceForm__wrapper-hidden__picto col-sm-1'>
-              <StatusPicto status={this.state.checkWsStatus} />
-            </div>
-          </div>
-
-          <div className='workspaceForm__item  form-group'>
-            <label className='col-sm-2 control-label' htmlFor='newWsDesc'>{ __('description') }</label>
-            <div className='col-sm-9'>
-              <input type='text' className='form-control' id='newWsDesc' onChange={this.handleChangeWsDesc} />
-            </div>
-          </div>
-        </div>
+        { tracimConfig.canCreateWs && (
+          <NewWorkspaceForm
+            onClickBtnNewWorkspace={this.handleShowForm}
+            onChangeWsName={this.handleChangeWsName}
+            onChangeWsDescription={this.handleChangeWsDesc}
+            wsAvailableStatus={this.state.checkWsStatus}
+            formHeight={this.state.formHeight} />
+        )}
 
         <div className='workspaceForm__nextbtn'>
           <button className='workspaceForm__nextbtn__btn btn' onClick={() => dispatch(switchForm(1))} disabled={!isBtnNextAllowed}>
@@ -109,5 +89,5 @@ export class WorkspaceForm extends React.Component {
   }
 }
 
-const mapStateToProps = ({ activeForm, workspace, user, role, apiData }) => ({ activeForm, workspace, user, role, selectedWs: apiData.workspace })
+const mapStateToProps = ({ tracimConfig, activeForm, workspace, user, role, apiData }) => ({ tracimConfig, activeForm, workspace, user, role, selectedWs: apiData.workspace })
 export default connect(mapStateToProps)(WorkspaceForm)

@@ -15,7 +15,9 @@ const newUserInit = {
   pw: '',
   canCreateWs: false,
   isAdmin: false,
-  sendEmailNotif: false
+  config: {
+    sendEmailNotif: false
+  }
 }
 
 export class UserForm extends React.Component {
@@ -59,8 +61,13 @@ export class UserForm extends React.Component {
     this.props.dispatch(addUserData(intUserId, userName))
   }
 
+  // handle click on canCreateWs and isAdmin
   handleClickCheckboxNewUser = (checkboxName) => {
     this.setState({...this.state, newUser: {...this.state.newUser, [checkboxName]: !this.state.newUser[checkboxName]}})
+  }
+
+  handleClickSendEmailNotif = () => {
+    this.setState({...this.state, newUser: {...this.state.newUser, config: {...this.state.newUser.config, sendEmailNotif: !this.state.newUser.config.sendEmailNotif}}})
   }
 
   handleChangeEmailInput = (e) => {
@@ -98,11 +105,11 @@ export class UserForm extends React.Component {
   }
 
   handleClickAddNewUser = () => {
-    const { name, email, pw, canCreateWs, isAdmin, sendEmailNotif } = this.state.newUser
+    const { name, email, pw, canCreateWs, isAdmin, config } = this.state.newUser
 
     if (name === '' || email === '' || this.state.nameValid === false || this.state.emailValid === false) return
 
-    this.props.dispatch(addNewUserData(name, email, pw, canCreateWs, isAdmin, sendEmailNotif))
+    this.props.dispatch(addNewUserData(name, email, pw, canCreateWs, isAdmin, config))
 
     this.setState({
       ...this.state,
@@ -120,7 +127,7 @@ export class UserForm extends React.Component {
 
     const canCreateWsClass = newUser.canCreateWs ? ' checked' : ''
     const isAdminClass = newUser.isAdmin ? ' checked' : ''
-    const sendEmailNotifClass = newUser.sendEmailNotif ? ' checked' : ''
+    const sendEmailNotifClass = newUser.config.sendEmailNotif ? ' checked' : ''
     const isNameValid = nameValid ? '' : ' has-error'
     const isEmailValid = emailValid ? '' : ' has-error'
 
@@ -213,7 +220,7 @@ export class UserForm extends React.Component {
             <div className='col-sm-offset-2 col-sm-9'>
               <div className='userForm__item checkbox'>
                 <label className={'customCheckbox' + sendEmailNotifClass} htmlFor='newUserSendEmailNotif'>
-                  <input type='checkbox' id='newUserSendEmailNotif' onClick={() => this.handleClickCheckboxNewUser('sendEmailNotif')} value={newUser.sendEmailNotif} />
+                  <input type='checkbox' id='newUserSendEmailNotif' onClick={() => this.handleClickSendEmailNotif()} value={newUser.config.sendEmailNotif} />
                   {__('notify by email the user about his account creation')}
                 </label>
               </div>

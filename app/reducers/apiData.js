@@ -33,8 +33,8 @@ export default function apiData (state = {
         : state
 
     case ADD_NEW_USER_DATA:
-      const { name, email, pw, canCreateWs, isAdmin, sendEmailNotif } = action
-      return {...state, user: [...state.user, { id: generateNewUserId(), isNew: true, name, email, pw, canCreateWs, isAdmin, sendEmailNotif, role: ROLE_LIST.READER.id, subscribeNotif: false }]}
+      const { name, email, pw, canCreateWs, isAdmin, config } = action
+      return {...state, user: [...state.user, { id: generateNewUserId(), isNew: true, name, email, pw, canCreateWs, isAdmin, config, role: ROLE_LIST.READER.id, subscribeNotif: false }]}
 
     case REMOVE_USER_DATA:
       return {...state, user: reject(state.user, { id: action.id })}

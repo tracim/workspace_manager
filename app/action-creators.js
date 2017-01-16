@@ -4,8 +4,8 @@ export const UPDATE_WORKSPACE = 'UPDATE_WORKSPACE'
 export const REMOVE_WORKSPACE = 'REMOVE_WORKSPACE'
 
 export const INIT_USER = 'INIT_USER'
-export const ADD_USER = 'ADD_USER'
-export const UPDATE_USER = 'UPDATE_USER'
+// export const ADD_USER = 'ADD_USER'
+// export const UPDATE_USER = 'UPDATE_USER'
 export const REMOVE_USER = 'REMOVE_USER'
 
 export const INIT_ROLE = 'INIT_ROLE'
@@ -46,12 +46,12 @@ export function removeWorkspace (id) {
 export function initUser (userList) {
   return { type: INIT_USER, userList }
 }
-export function addUser (id, name, email, canCreateWs, isAdmin, sendEmailNotif) {
-  return { type: ADD_USER, id, name, email, canCreateWs, isAdmin, sendEmailNotif }
-}
-export function updateUser (id, name, email, canCreateWs, isAdmin, sendEmailNotif) {
-  return { type: ADD_USER, id, name, email, canCreateWs, isAdmin, sendEmailNotif }
-}
+// export function addUser (id, name, email, canCreateWs, isAdmin, config) {
+//   return { type: ADD_USER, id, name, email, canCreateWs, isAdmin, config }
+// }
+// export function updateUser (id, name, email, canCreateWs, isAdmin, config) {
+//   return { type: ADD_USER, id, name, email, canCreateWs, isAdmin, config }
+// }
 export function removeUser (id) {
   return { type: REMOVE_USER, id }
 }
@@ -108,8 +108,8 @@ export function resetUserData () {
 export function addUserData (id, name) {
   return { type: ADD_USER_DATA, id, name }
 }
-export function addNewUserData (name, email, pw, canCreateWs, isAdmin, sendEmailNotif) {
-  return { type: ADD_NEW_USER_DATA, name, email, pw, canCreateWs, isAdmin, sendEmailNotif }
+export function addNewUserData (name, email, pw, canCreateWs, isAdmin, config) {
+  return { type: ADD_NEW_USER_DATA, name, email, pw, canCreateWs, isAdmin, config }
 }
 export function removeUserData (id) {
   return { type: REMOVE_USER_DATA, id }

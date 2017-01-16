@@ -6,6 +6,8 @@ export const INIT_ROLE = 'INIT_ROLE'
 
 export const SET_TRACIM_CONFIG = 'SET_TRACIM_CONFIG'
 
+export const INIT_TIMEZONE = 'INIT_TIMEZONE'
+
 export const REQUEST_INITDATA_START = 'REQUEST_INITDATA_START'
 export const REQUEST_INITDATA_END = 'REQUEST_INITDATA_END'
 export const REQUEST_CHECKWS_START = 'REQUEST_CHECKWS_START'
@@ -40,28 +42,43 @@ export function setTracimConfig (tracimConfig) {
   return { type: SET_TRACIM_CONFIG, tracimConfig }
 }
 
+export function initTimezone (timezoneList) {
+  return { type: INIT_TIMEZONE, timezoneList }
+}
+
 export function requestAsyncInitStart () {
   return { type: REQUEST_INITDATA_START }
 }
 export function fetchConfig (urlJsonCfg) {
   return function (dispatch) { // returning a function in an action creator is allowed by the middleware redux-thunk to handle asynchronous actions
     dispatch(requestAsyncInitStart()) // set isFetching to true to display a loader
-    return fetch(urlJsonCfg, {
-      method: 'GET',
-      headers: { 'Accept': 'application/json' }
-    })
-    .then(response => response.json())
-    .then(json =>
-      Promise.all([ // thoses dispatch will update every parts of the store according to the config got by ajax
-        dispatch(setTracimConfig(json.tracimConfig)),
-        dispatch(initWorkspace(json.workspace)),
-        json.selectedWs.id !== null && dispatch(setWorkspaceData(json.selectedWs.id, json.selectedWs.name, json.user, json.role)),
-        dispatch(initUser(json.user)),
-        dispatch(initRole(json.role))
-      ])
-    )
-    .then(() => dispatch(requestAsyncInitEnd())) // set isFetching to false to hide the loader
-    .catch((e) => console.log('Error fetching config', e))
+    return Promise.all(
+      [
+        fetch(urlJsonCfg, {
+          method: 'GET',
+          headers: { 'Accept': 'application/json' }
+        })
+        .then(response => response.json())
+        .then(json =>
+          Promise.all([ // thoses dispatch will update every parts of the store according to the config got by ajax
+            dispatch(setTracimConfig(json.tracimConfig)),
+            dispatch(initWorkspace(json.workspace)),
+            json.selectedWs.id !== null && dispatch(setWorkspaceData(json.selectedWs.id, json.selectedWs.name, json.user, json.role)),
+            dispatch(initUser(json.user)),
+            dispatch(initRole(json.role))
+          ])
+        )
+        .catch((e) => console.log('Error fetching config', e)),
+
+        fetch('./temp_timezone.json', {
+          method: 'GET',
+          headers: { 'Accept': 'application/json' }
+        })
+        .then(reponse => reponse.json())
+        .then(json => dispatch(initTimezone(json.value_list)))
+        .catch((e) => console.log('Error fetching config', e))
+      ]
+    ).then(() => dispatch(requestAsyncInitEnd())) // set isFetching to false to hide the loader
   }
 }
 export function requestAsyncInitEnd () {
@@ -84,8 +101,8 @@ export function resetUserData () {
 export function addUserData (id, name) {
   return { type: ADD_USER_DATA, id, name }
 }
-export function addNewUserData (name, email, pw, canCreateWs, isAdmin, config) {
-  return { type: ADD_NEW_USER_DATA, name, email, pw, canCreateWs, isAdmin, config }
+export function addNewUserData (name, email, pw, timezone, canCreateWs, isAdmin, config) {
+  return { type: ADD_NEW_USER_DATA, name, email, pw, timezone, canCreateWs, isAdmin, config }
 }
 export function removeUserData (id) {
   return { type: REMOVE_USER_DATA, id }

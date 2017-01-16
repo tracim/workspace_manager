@@ -13,6 +13,7 @@ const newUserInit = {
   email: '',
   checkEmailStatus: ASYNC_STATUS.INIT,
   pw: '',
+  timezone: '',
   canCreateWs: false,
   isAdmin: false,
   config: {
@@ -26,8 +27,10 @@ export class UserForm extends React.Component {
     this.state = {
       searchedUser: '',
       matchingUser: [],
+      searchedTimezone: '',
+      matchingTimezone: [],
       formHeight: '0px',
-      formMaxHeight: '323px', // magic number equals to the total height of the form (must be updated if form's html change)
+      formMaxHeight: '356px', // magic number equals to the total height of the form (must be updated if form's html change)
       roleFormVisibility: true,
       newUser: newUserInit,
       nameValid: true,
@@ -56,6 +59,17 @@ export class UserForm extends React.Component {
 
     const userName = this.props.user[findIndex(this.props.user, {id: intUserId})].name
     this.props.dispatch(addUserData(intUserId, userName))
+  }
+
+  handleSearchTimezone = (e) => {
+    const searchTerm = e.target.value.toLowerCase()
+    const matchingTimezone = this.props.timezone.filter((oneTimezone) => oneTimezone.toLowerCase().includes(searchTerm))
+
+    this.setState({...this.state, searchedTimezone: searchTerm, matchingTimezone: matchingTimezone})
+  }
+
+  assignTimezone = (timezone) => {
+    this.setState({...this.state, searchedTimezone: timezone, matchingTimezone: [], newUser: {...this.state.newUser, timezone}})
   }
 
   // handle click on canCreateWs and isAdmin
@@ -102,11 +116,11 @@ export class UserForm extends React.Component {
   }
 
   handleClickAddNewUser = () => {
-    const { name, email, pw, canCreateWs, isAdmin, config } = this.state.newUser
+    const { name, email, pw, timezone, canCreateWs, isAdmin, config } = this.state.newUser
 
     if (name === '' || email === '' || this.state.nameValid === false || this.state.emailValid === false) return
 
-    this.props.dispatch(addNewUserData(name, email, pw, canCreateWs, isAdmin, config))
+    this.props.dispatch(addNewUserData(name, email, pw, timezone, canCreateWs, isAdmin, config))
 
     this.setState({
       ...this.state,
@@ -120,7 +134,7 @@ export class UserForm extends React.Component {
 
   render () {
     const { tracimConfig, activeForm, addedUser, dispatch } = this.props
-    const { searchedUser, matchingUser, newUser, nameValid, emailValid, formHeight, roleFormVisibility } = this.state
+    const { searchedUser, matchingUser, searchedTimezone, matchingTimezone, newUser, nameValid, emailValid, formHeight, roleFormVisibility } = this.state
 
     const canCreateWsClass = newUser.canCreateWs ? ' checked' : ''
     const isAdminClass = newUser.isAdmin ? ' checked' : ''
@@ -148,10 +162,10 @@ export class UserForm extends React.Component {
               </select>
               */}
               <div className='userForm__searchUser'>
-                <input type='text' className='userForm__searchUser__input form-control' id='searchUser' placeholder='Rechercher un utilisateur ...' onChange={this.handleSearchUser} value={searchedUser} />
-                <div className='userForm__searchUser__autocomplete' style={{display: matchingUser.length > 0 ? 'block' : 'none'}}>
+                <input type='text' className='userForm__searchUser__input form-control' id='searchUser' placeholder={__('search for a user')} onChange={this.handleSearchUser} value={searchedUser} />
+                <div className='userForm__searchUser__autocomplete generic-autocomplete' style={{display: matchingUser.length > 0 ? 'block' : 'none'}}>
                   { matchingUser.map((oneUser, i) =>
-                    <div className='userForm__searchUser__autocomplete__item' key={'user_' + i} onClick={() => this.assignUser(oneUser.id)}>
+                    <div className='userForm__searchUser__autocomplete__item generic-autocomplete__item' key={'user_' + i} onClick={() => this.assignUser(oneUser.id)}>
                       {oneUser.name}
                     </div>
                   )}
@@ -196,6 +210,20 @@ export class UserForm extends React.Component {
                   <label className='col-sm-2 control-label' htmlFor='newUserPasssword'>{__('password')}</label>
                   <div className='col-sm-9'>
                     <input type='password' className='form-control' id='newUserPasssword' placeholder={__('password optional')} onChange={this.handleChangePwInput} value={newUser.pw} />
+                  </div>
+                </div>
+
+                <div className='userForm__item form-group'>
+                  <label className='col-sm-2 control-label' htmlFor='newUserTimezone'>{__('timezone')}</label>
+                  <div className='col-sm-9'>
+                    <input type='text' className='form-control' id='newUserTimezone' placeholder={__('search for a timezone')} onChange={this.handleSearchTimezone} value={searchedTimezone} />
+                    <div className='userForm__item__timezone generic-autocomplete' style={{display: matchingTimezone.length > 0 ? 'block' : 'none'}}>
+                      { matchingTimezone.map((oneTimezone, i) =>
+                        <div className='userForm__item__timezone generic-autocomplete__item' key={'user_' + i} onClick={() => this.assignTimezone(oneTimezone)}>
+                          {oneTimezone}
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
 
@@ -247,5 +275,5 @@ export class UserForm extends React.Component {
   }
 }
 
-const mapStateToProps = ({ tracimConfig, activeForm, user, apiData }) => ({ tracimConfig, activeForm, user, addedUser: apiData.user })
+const mapStateToProps = ({ tracimConfig, activeForm, user, apiData, timezone }) => ({ tracimConfig, activeForm, user, addedUser: apiData.user, timezone })
 export default connect(mapStateToProps)(UserForm)

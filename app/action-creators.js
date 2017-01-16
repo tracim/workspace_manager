@@ -1,12 +1,6 @@
 export const INIT_WORKSPACE = 'INIT_WORKSPACE'
-export const ADD_WORKSPACE = 'ADD_WORKSPACE'
-export const UPDATE_WORKSPACE = 'UPDATE_WORKSPACE'
-export const REMOVE_WORKSPACE = 'REMOVE_WORKSPACE'
 
 export const INIT_USER = 'INIT_USER'
-// export const ADD_USER = 'ADD_USER'
-// export const UPDATE_USER = 'UPDATE_USER'
-export const REMOVE_USER = 'REMOVE_USER'
 
 export const INIT_ROLE = 'INIT_ROLE'
 
@@ -33,27 +27,9 @@ export const UPDATE_USER_EMAILNOTIF_DATA = 'UPDATE_USER_EMAILNOTIF_DATA'
 export function initWorkspace (wsList) {
   return { type: INIT_WORKSPACE, wsList }
 }
-export function addWorkspace (name) {
-  return { type: ADD_WORKSPACE, name }
-}
-export function updateWorkspace (id, name) {
-  return { type: UPDATE_WORKSPACE, id, name }
-}
-export function removeWorkspace (id) {
-  return { type: REMOVE_WORKSPACE, id }
-}
 
 export function initUser (userList) {
   return { type: INIT_USER, userList }
-}
-// export function addUser (id, name, email, canCreateWs, isAdmin, config) {
-//   return { type: ADD_USER, id, name, email, canCreateWs, isAdmin, config }
-// }
-// export function updateUser (id, name, email, canCreateWs, isAdmin, config) {
-//   return { type: ADD_USER, id, name, email, canCreateWs, isAdmin, config }
-// }
-export function removeUser (id) {
-  return { type: REMOVE_USER, id }
 }
 
 export function initRole (userRole) {

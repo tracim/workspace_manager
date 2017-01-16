@@ -43,12 +43,9 @@ export class UserForm extends React.Component {
 
   handleSearchUser = (e) => {
     const searchTerm = e.target.value.toLowerCase()
-    const tempMatchinUsers = this.props.user.reduce((acc, oneUser) => {
-      if (oneUser.name.toLowerCase().includes(searchTerm)) acc.push(oneUser)
-      return acc
-    }, [])
+    const matchingUsers = this.props.user.filter((oneUser) => oneUser.name.toLowerCase().includes(searchTerm))
 
-    this.setState({...this.state, searchedUser: searchTerm, matchingUser: tempMatchinUsers})
+    this.setState({...this.state, searchedUser: searchTerm, matchingUser: matchingUsers})
   }
 
   assignUser = (userId) => {

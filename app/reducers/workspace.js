@@ -1,4 +1,4 @@
-import { INIT_WORKSPACE, CREATE_WORKSPACE, UPDATE_WORKSPACE } from '../action-creators.js'
+import { INIT_WORKSPACE, CREATE_WORKSPACE } from '../action-creators.js'
 import { WS_RESERVED_ID } from '../lib/helper.js'
 
 export default function workspace (state = [], action) {
@@ -9,12 +9,6 @@ export default function workspace (state = [], action) {
     case CREATE_WORKSPACE:
       return {
         id: WS_RESERVED_ID.NEW_WS,
-        name: action.name
-      }
-
-    case UPDATE_WORKSPACE:
-      return {
-        id: action.id,
         name: action.name
       }
 

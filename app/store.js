@@ -10,10 +10,10 @@ const defaultStore = {
   isFetching: false
 }
 
-const configPath = document.getElementById('workspace_manager').getAttribute('configPath')
+const apiPath = document.getElementById('workspace_manager').getAttribute('apiPath')
 
 export const store = ((middleware, reduxDevTools) =>
-  configPath !== ''
+  apiPath !== ''
     ? createStore(coreReducer, compose(middleware, reduxDevTools || (f => f)))
     : createStore(coreReducer, defaultStore, reduxDevTools)
 )(
@@ -21,4 +21,4 @@ export const store = ((middleware, reduxDevTools) =>
   window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
 )
 
-if (configPath !== '') store.dispatch(fetchConfig(configPath))
+if (apiPath !== '') store.dispatch(fetchConfig(apiPath))

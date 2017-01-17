@@ -45,36 +45,63 @@ export function initTimezone (timezoneList) {
 export function requestAsyncInitStart () {
   return { type: REQUEST_INITDATA_START }
 }
-export function fetchConfig (urlJsonCfg) {
+export function fetchConfig (apiPath) {
   return function (dispatch) { // returning a function in an action creator is allowed by the middleware redux-thunk to handle asynchronous actions
     dispatch(requestAsyncInitStart()) // set isFetching to true to display a loader
+    const fetchCfg = {
+      method: 'GET',
+      headers: { 'Accept': 'application/json' }
+    }
     return Promise.all(
-      [
-        fetch(urlJsonCfg, {
-          method: 'GET',
-          headers: { 'Accept': 'application/json' }
-        })
-        .then(response => response.json())
-        .then(json =>
-          Promise.all([ // thoses dispatch will update every parts of the store according to the config got by ajax
-            dispatch(setTracimConfig(json.tracimConfig)),
-            dispatch(initWorkspace(json.workspace)),
-            json.selectedWs.id !== null && dispatch(setWorkspaceData(json.selectedWs.id, json.selectedWs.name, json.user, json.role)),
-            dispatch(initUser(json.user)),
-            dispatch(initRole(json.role))
-          ])
-        )
-        .catch((e) => console.log('Error fetching config', e)),
+      // [
+      //   fetch(apiPath + '/tracim_config', fetchCfg)
+      //   .then(response => response.json()).then(json => dispatch(setTracimConfig(json.value_list)))
+      //   .catch((e) => console.log('Error fetching tracim_config', e)),
 
-        fetch('./temp_timezone.json', {
-          method: 'GET',
-          headers: { 'Accept': 'application/json' }
-        })
-        .then(reponse => reponse.json())
-        .then(json => dispatch(initTimezone(json.value_list)))
-        .catch((e) => console.log('Error fetching config', e))
-      ]
-    ).then(() => dispatch(requestAsyncInitEnd())) // set isFetching to false to hide the loader
+      //   fetch(apiPath + '/workspaces', fetchCfg)
+      //   .then(response => response.json()).then(json => dispatch(initWorkspace(json.value_list)))
+      //   .catch((e) => console.log('Error fetching workspaces', e)),
+
+      //   fetch(apiPath + '/users', fetchCfg)
+      //   .then(response => response.json()).then(json => dispatch(initUser(json.value_list)))
+      //   .catch((e) => console.log('Error fetching users', e)),
+
+      //   fetch(apiPath + '/users_workspaces', fetchCfg)
+      //   .then(response => response.json()).then(json => dispatch(initRole(json.value_list)))
+      //   .catch((e) => console.log('Error fetching users_workspaces', e)),
+
+      //   fetch(apiPath + '/timezone', fetchCfg)
+      //   .then(response => response.json()).then(json => dispatch(initTimezone(json.value_list)))
+      //   .catch((e) => console.log('Error fetching timezone', e))
+      // ]
+
+      [{
+        endpoint: 'tracim_config',
+        callback: setTracimConfig
+      }, {
+        endpoint: 'workspaces',
+        callback: initWorkspace
+      }, {
+        endpoint: 'users',
+        callback: initUser
+      }, {
+        endpoint: 'users_workspaces',
+        callback: initRole
+      }, {
+        endpoint: 'timezone',
+        callback: initTimezone
+      }]
+      .map((oneFetch) => // this map() will return an array of promises
+        fetch(apiPath + oneFetch.endpoint, fetchCfg)
+          .then(response => response.json()).then(json => dispatch(oneFetch.callback(json.value_list)))
+          .catch((e) => console.log('Error fetchting ' + oneFetch.endpoint, e))
+      )
+
+    ).then((allData) =>
+      dispatch(setWorkspaceData(allData[0].tracimConfig.selectedWs.id, allData[0].tracimConfig.selectedWs.name, allData[2].userList, allData[3].userRole))
+    )
+    .then(() => dispatch(requestAsyncInitEnd())) // set isFetching to false to hide the loader
+    .catch((e) => console.log('Error fetching data', e))
   }
 }
 export function requestAsyncInitEnd () {

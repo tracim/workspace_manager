@@ -5,7 +5,11 @@ export default function tracimConfig (state = {
   login: '',
   email: '',
   canCreateWs: false,
-  canCreateUser: false
+  canCreateUser: false,
+  selectedWs: {
+    id: 0,
+    name: ''
+  }
 }, action) {
   switch (action.type) {
     case SET_TRACIM_CONFIG:

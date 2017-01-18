@@ -9,7 +9,7 @@ export default function workspace (state = [], action) {
     case CREATE_WORKSPACE:
       return {
         id: WS_RESERVED_ID.NEW_WS,
-        name: action.name
+        label: action.name
       }
 
     default:

@@ -57,7 +57,7 @@ export class Recap extends React.Component {
               <div className='recap__data'>
                 <div className='recap__data__item'>
                   <div className='recap__data__item__action'>[{ workspace.id === WS_RESERVED_ID.NEW_WS ? __('creation') : __('selection') }]</div>
-                  <div className='recap__data__item__name'>{ workspace.name }</div>
+                  <div className='recap__data__item__name'>{ workspace.label }</div>
                   <div className='recap__data__item__status'>
                     <StatusPicto status={ASYNC_STATUS.IN_PROGRESS} />
                   </div>

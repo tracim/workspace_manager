@@ -28,14 +28,14 @@ export class WorkspaceForm extends React.Component {
 
     if (workspaceId === WS_RESERVED_ID.NO_WS_SELECTED) return
 
-    const workspaceName = e.nativeEvent.target[e.nativeEvent.target.selectedIndex].text
+    const workspaceLabel = e.nativeEvent.target[e.nativeEvent.target.selectedIndex].text
 
-    this.props.dispatch(setWorkspaceData(workspaceId, workspaceName, this.props.user, this.props.role))
+    this.props.dispatch(setWorkspaceData(workspaceId, workspaceLabel, this.props.user, this.props.role))
     this.props.dispatch(switchForm(1))
   }
 
-  handleChangeWsName = (e) => {
-    const newWsName = e.target.value
+  handleChangeWsLabel = (e) => {
+    const newWsLabel = e.target.value
     this.setState({...this.state, checkWsStatus: ASYNC_STATUS.IN_PROGRESS})
 
     fetch('/temp_check_async.json', {
@@ -45,7 +45,7 @@ export class WorkspaceForm extends React.Component {
     .then(response => response.json())
     .then(json => {
       this.setState({...this.state, checkWsStatus: json.can_be_used === true ? ASYNC_STATUS.OK : ASYNC_STATUS.ERROR})
-      this.props.dispatch(setWorkspaceData(WS_RESERVED_ID.NEW_WS, newWsName, [], []))
+      this.props.dispatch(setWorkspaceData(WS_RESERVED_ID.NEW_WS, newWsLabel, [], []))
     })
     .catch((e) => console.log('Error fetching workspace', e))
   }
@@ -65,7 +65,7 @@ export class WorkspaceForm extends React.Component {
           <div className='col-sm-offset-1 col-sm-10'>
             <select className='form-control' value={selectedWs.id} onChange={this.handleAssignWorkspace}>
               <option value={WS_RESERVED_ID.NO_WS_SELECTED}>{ __('choose a workspace') }</option>
-              { workspace.map((item, i) => <option value={item.id} key={'ws_' + i}>{item.name}</option>) }
+              { workspace.map((item, i) => <option value={item.id} key={'ws_' + i}>{item.label}</option>) }
             </select>
           </div>
         </div>
@@ -73,7 +73,7 @@ export class WorkspaceForm extends React.Component {
         { tracimConfig.canCreateWs && (
           <NewWorkspaceForm
             onClickBtnNewWorkspace={this.handleShowForm}
-            onChangeWsName={this.handleChangeWsName}
+            onChangeWsName={this.handleChangeWsLabel}
             onChangeWsDescription={this.handleChangeWsDesc}
             wsAvailableStatus={this.state.checkWsStatus}
             formHeight={this.state.formHeight} />

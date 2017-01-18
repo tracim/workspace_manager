@@ -53,6 +53,7 @@ export function fetchConfig (apiPath) {
       headers: { 'Accept': 'application/json' }
     }
     return Promise.all(
+      // without map()
       // [
       //   fetch(apiPath + '/tracim_config', fetchCfg)
       //   .then(response => response.json()).then(json => dispatch(setTracimConfig(json.value_list)))
@@ -75,6 +76,7 @@ export function fetchConfig (apiPath) {
       //   .catch((e) => console.log('Error fetching timezone', e))
       // ]
 
+      // with map()
       [{
         endpoint: 'tracim_config',
         callback: setTracimConfig
@@ -98,7 +100,7 @@ export function fetchConfig (apiPath) {
       )
 
     ).then((allData) =>
-      dispatch(setWorkspaceData(allData[0].tracimConfig.selectedWs.id, allData[0].tracimConfig.selectedWs.name, allData[2].userList, allData[3].userRole))
+      dispatch(setWorkspaceData(allData[0].tracimConfig.selectedWs.id, allData[0].tracimConfig.selectedWs.label, allData[2].userList, allData[3].userRole))
     )
     .then(() => dispatch(requestAsyncInitEnd())) // set isFetching to false to hide the loader
     .catch((e) => console.log('Error fetching data', e))
@@ -112,8 +114,8 @@ export function switchForm (formId) {
   return { type: SWITCH_FORM, formId }
 }
 
-export function setWorkspaceData (id, name, userList, roleList) {
-  return { type: SET_WS_DATA, id, name, userList, roleList }
+export function setWorkspaceData (id, label, userList, roleList) {
+  return { type: SET_WS_DATA, id, label, userList, roleList }
 }
 export function setWorkspaceDescription (description) {
   return { type: SET_WS_DESCRIPTION, description }

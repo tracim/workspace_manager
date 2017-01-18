@@ -1,5 +1,5 @@
 import { INIT_WORKSPACE, CREATE_WORKSPACE } from '../action-creators.js'
-import { WS_RESERVED_ID } from '../lib/helper.js'
+import { WORKSPACE_RESERVED_ID } from '../lib/helper.js'
 
 export default function workspace (state = [], action) {
   switch (action.type) {
@@ -8,7 +8,7 @@ export default function workspace (state = [], action) {
 
     case CREATE_WORKSPACE:
       return {
-        id: WS_RESERVED_ID.NEW_WS,
+        id: WORKSPACE_RESERVED_ID.NEW_WORKSPACE,
         label: action.name
       }
 

@@ -36,9 +36,9 @@ export function displayRole (roleID) {
   }
 }
 
-export const WS_RESERVED_ID = {
-  NO_WS_SELECTED: -1,
-  NEW_WS: -2
+export const WORKSPACE_RESERVED_ID = {
+  NO_WORKSPACE_SELECTED: -1,
+  NEW_WORKSPACE: -2
 }
 
 export function generateNewUserId () {

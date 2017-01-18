@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import Collapse from 'react-collapse'
-import { ASYNC_STATUS, WS_RESERVED_ID, displayRole } from '../lib/helper.js'
+import { ASYNC_STATUS, WORKSPACE_RESERVED_ID, displayRole } from '../lib/helper.js'
 import RecapUserItem from '../components/RecapUserItem.jsx'
 import StatusPicto from '../components/StatusPicto.jsx'
 import { switchForm } from '../action-creators.js'
@@ -56,7 +56,7 @@ export class Recap extends React.Component {
 
               <div className='recap__data'>
                 <div className='recap__data__item'>
-                  <div className='recap__data__item__action'>[{ workspace.id === WS_RESERVED_ID.NEW_WS ? __('creation') : __('selection') }]</div>
+                  <div className='recap__data__item__action'>[{ workspace.id === WORKSPACE_RESERVED_ID.NEW_WORKSPACE ? __('creation') : __('selection') }]</div>
                   <div className='recap__data__item__name'>{ workspace.label }</div>
                   <div className='recap__data__item__status'>
                     <StatusPicto status={ASYNC_STATUS.IN_PROGRESS} />

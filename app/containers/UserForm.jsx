@@ -105,9 +105,9 @@ export class UserForm extends React.Component {
       }
     })
 
-    fetch('/temp_check_async.json', {
-      method: 'GET',
-      headers: { 'Accept': 'application/json' }
+    fetch(GLOBAL_API_PATH + 'users/email/' + 'email_to_test' + '/can_be_used', {
+      'method': 'GET',
+      'headers': { 'Accept': 'application/json' }
     })
     .then(response => response.json())
     .then(json => this.setState({

@@ -1,9 +1,9 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import Collapse from 'react-collapse'
-import { switchForm, setWorkspaceData, setWorkspaceDescription } from '../action-creators.js'
+import { switchForm, setWorkspaceData, setWorkspaceDescription, requestAsyncInitStart, requestAsyncInitEnd } from '../action-creators.js'
 import NewWorkspaceForm from '../components/NewWorkspaceForm.jsx'
-import { ASYNC_STATUS, WS_RESERVED_ID } from '../lib/helper.js'
+import { ASYNC_STATUS, WS_RESERVED_ID, GLOBAL_API_PATH } from '../lib/helper.js'
 import __ from '../trad.js'
 
 export class WorkspaceForm extends React.Component {
@@ -24,14 +24,24 @@ export class WorkspaceForm extends React.Component {
 
   handleAssignWorkspace = (e) => {
     const workspaceId = parseInt(e.target.value)
+    const { dispatch } = this.props
+
     this.setState({...this.state, formHeight: '0px'})
 
     if (workspaceId === WS_RESERVED_ID.NO_WS_SELECTED) return
 
     const workspaceLabel = e.nativeEvent.target[e.nativeEvent.target.selectedIndex].text
 
-    this.props.dispatch(setWorkspaceData(workspaceId, workspaceLabel, this.props.user, this.props.role))
-    this.props.dispatch(switchForm(1))
+    dispatch(requestAsyncInitStart())
+    fetch(GLOBAL_API_PATH + '/workspaces/' + workspaceId + '/users/roles', {
+      'method': 'GET',
+      'headers': { 'Accept': 'application/json' }
+    })
+    .then(response => response.json())
+    .then(json => dispatch(setWorkspaceData(workspaceId, workspaceLabel, json)))
+    .then(() => dispatch(requestAsyncInitEnd()))
+    // .then(() => new Promise((resolve, reject) => window.setTimeout(() => resolve(dispatch(requestAsyncInitEnd())), 5000))) // for testing purpose
+    .then(() => dispatch(switchForm(1)))
   }
 
   handleChangeWsLabel = (e) => {
@@ -55,7 +65,7 @@ export class WorkspaceForm extends React.Component {
   }
 
   render () {
-    const { tracimConfig, activeForm, workspace, selectedWs, dispatch } = this.props
+    const { tracimConfig, activeForm, workspace, selectedWs, isFetching, dispatch } = this.props
 
     const isBtnNextAllowed = (selectedWs.id !== WS_RESERVED_ID.NO_WS_SELECTED && selectedWs.id !== WS_RESERVED_ID.NEW_WS) || this.state.checkWsStatus === ASYNC_STATUS.OK
 
@@ -70,7 +80,7 @@ export class WorkspaceForm extends React.Component {
           </div>
         </div>
 
-        { tracimConfig.canCreateWs && (
+        { tracimConfig.rights.canCreateWorkspace && (
           <NewWorkspaceForm
             onClickBtnNewWorkspace={this.handleShowForm}
             onChangeWsName={this.handleChangeWsLabel}
@@ -81,7 +91,7 @@ export class WorkspaceForm extends React.Component {
 
         <div className='workspaceForm__nextbtn'>
           <button className='workspaceForm__nextbtn__btn btn' onClick={() => dispatch(switchForm(1))} disabled={!isBtnNextAllowed}>
-            <i className='fa fa-chevron-right' />
+            <i className={isFetching ? 'fa fa-spinner fa-spin' : 'fa fa-chevron-right'} />
           </button>
         </div>
       </Collapse>
@@ -89,5 +99,5 @@ export class WorkspaceForm extends React.Component {
   }
 }
 
-const mapStateToProps = ({ tracimConfig, activeForm, workspace, user, role, apiData }) => ({ tracimConfig, activeForm, workspace, user, role, selectedWs: apiData.workspace })
+const mapStateToProps = ({ tracimConfig, activeForm, workspace, apiData, isFetching }) => ({ tracimConfig, activeForm, workspace, selectedWs: apiData.workspace, isFetching })
 export default connect(mapStateToProps)(WorkspaceForm)

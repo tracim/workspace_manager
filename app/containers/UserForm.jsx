@@ -2,9 +2,8 @@ import React from 'react'
 import { connect } from 'react-redux'
 import Collapse from 'react-collapse'
 import { switchForm, addUserData, addNewUserData } from '../action-creators.js'
-import { ASYNC_STATUS } from '../lib/helper.js'
+import { ASYNC_STATUS, GLOBAL_API_PATH } from '../lib/helper.js'
 import StatusPicto from '../components/StatusPicto.jsx'
-import findIndex from 'lodash.findindex'
 import RoleForm from './RoleForm.jsx'
 import __ from '../trad.js'
 
@@ -14,8 +13,10 @@ const newUserInit = {
   checkEmailStatus: ASYNC_STATUS.INIT,
   pw: '',
   timezone: '',
-  canCreateWs: false,
-  isAdmin: false,
+  rights: {
+    canCreateWorkspace: false,
+    isAdmin: false
+  },
   config: {
     sendEmailNotif: false
   }
@@ -46,19 +47,25 @@ export class UserForm extends React.Component {
 
   handleSearchUser = (e) => {
     const searchTerm = e.target.value.toLowerCase()
-    const matchingUsers = this.props.user.filter((oneUser) => oneUser.name.toLowerCase().includes(searchTerm))
+    if (searchTerm.length <= 2) {
+      this.setState({...this.state, searchedUser: searchTerm, matchingUser: []})
+      return
+    }
 
-    this.setState({...this.state, searchedUser: searchTerm, matchingUser: matchingUsers})
+    fetch(GLOBAL_API_PATH + 'users/acp/temp_name', { // @TODO: remplace tempa_name by '?q=' + searchTerm
+      'method': 'GET',
+      'headers': { 'Accept': 'application/json' }
+    })
+    .then(response => response.json())
+    .then(json => this.setState({...this.state, searchedUser: searchTerm, matchingUser: json}))
+    .catch(e => this.setState({...this.state, searchedUser: searchTerm, matchingUser: []}))
   }
 
-  assignUser = (userId) => {
-    this.setState({...this.state, selectedUser: userId, formHeight: '0px', roleFormVisibility: true, searchedUser: '', matchingUser: []})
+  assignUser = (user) => {
+    this.setState({...this.state, selectedUser: user.id, formHeight: '0px', roleFormVisibility: true, searchedUser: '', matchingUser: []})
 
-    if (userId === '') return
-    const intUserId = parseInt(userId)
-
-    const userName = this.props.user[findIndex(this.props.user, {id: intUserId})].name
-    this.props.dispatch(addUserData(intUserId, userName))
+    if (user === '') return
+    this.props.dispatch(addUserData(user.id, user.name))
   }
 
   handleSearchTimezone = (e) => {
@@ -72,9 +79,9 @@ export class UserForm extends React.Component {
     this.setState({...this.state, searchedTimezone: timezone, matchingTimezone: [], newUser: {...this.state.newUser, timezone}})
   }
 
-  // handle click on canCreateWs and isAdmin
+  // handle click on canCreateWorkspace and isAdmin
   handleClickCheckboxNewUser = (checkboxName) => {
-    this.setState({...this.state, newUser: {...this.state.newUser, [checkboxName]: !this.state.newUser[checkboxName]}})
+    this.setState({...this.state, newUser: {...this.state.newUser, rights: {...this.state.newUser.rights, [checkboxName]: !this.state.newUser[checkboxName]}}})
   }
 
   handleClickSendEmailNotif = () => {
@@ -103,7 +110,14 @@ export class UserForm extends React.Component {
       headers: { 'Accept': 'application/json' }
     })
     .then(response => response.json())
-    .then(json => this.setState({...this.state, emailValid: true, newUser: {...this.state.newUser, checkEmailStatus: json.can_be_used === true ? ASYNC_STATUS.OK : ASYNC_STATUS.ERROR}}))
+    .then(json => this.setState({
+      ...this.state,
+      emailValid: true,
+      newUser: {
+        ...this.state.newUser,
+        checkEmailStatus: json.can_be_used === true ? ASYNC_STATUS.OK : ASYNC_STATUS.ERROR
+      }
+    }))
     .catch((e) => console.log('Error fetching user data', e))
   }
 
@@ -116,11 +130,11 @@ export class UserForm extends React.Component {
   }
 
   handleClickAddNewUser = () => {
-    const { name, email, pw, timezone, canCreateWs, isAdmin, config } = this.state.newUser
+    const { name, email, pw, timezone, rights, config } = this.state.newUser
 
     if (name === '' || email === '' || this.state.nameValid === false || this.state.emailValid === false) return
 
-    this.props.dispatch(addNewUserData(name, email, pw, timezone, canCreateWs, isAdmin, config))
+    this.props.dispatch(addNewUserData(name, email, pw, timezone, rights, config))
 
     this.setState({
       ...this.state,
@@ -136,8 +150,8 @@ export class UserForm extends React.Component {
     const { tracimConfig, activeForm, addedUser, dispatch } = this.props
     const { searchedUser, matchingUser, searchedTimezone, matchingTimezone, newUser, nameValid, emailValid, formHeight, roleFormVisibility } = this.state
 
-    const canCreateWsClass = newUser.canCreateWs ? ' checked' : ''
-    const isAdminClass = newUser.isAdmin ? ' checked' : ''
+    const canCreateWorkspaceClass = newUser.rights.canCreateWorkspace ? ' checked' : ''
+    const isAdminClass = newUser.rights.isAdmin ? ' checked' : ''
     const sendEmailNotifClass = newUser.config.sendEmailNotif ? ' checked' : ''
     const isNameValid = nameValid ? '' : ' has-error'
     const isEmailValid = emailValid ? '' : ' has-error'
@@ -165,7 +179,7 @@ export class UserForm extends React.Component {
                 <input type='text' className='userForm__searchUser__input form-control' id='searchUser' placeholder={__('search for a user')} onChange={this.handleSearchUser} value={searchedUser} />
                 <div className='userForm__searchUser__autocomplete generic-autocomplete' style={{display: matchingUser.length > 0 ? 'block' : 'none'}}>
                   { matchingUser.map((oneUser, i) =>
-                    <div className='userForm__searchUser__autocomplete__item generic-autocomplete__item' key={'user_' + i} onClick={() => this.assignUser(oneUser.id)}>
+                    <div className='userForm__searchUser__autocomplete__item generic-autocomplete__item' key={'user_' + i} onClick={() => this.assignUser(oneUser)}>
                       {oneUser.name}
                     </div>
                   )}
@@ -174,7 +188,7 @@ export class UserForm extends React.Component {
             </div>
           </div>
 
-          { tracimConfig.canCreateUser && (
+          { tracimConfig.rights.canCreateUser && (
             <div className='workspaceForm__formwrapper'>
 
               <div className='workspaceForm__item__separator form-group'>
@@ -229,8 +243,8 @@ export class UserForm extends React.Component {
 
                 <div className='col-sm-offset-2 col-sm-9'>
                   <div className='userForm__item checkbox'>
-                    <label className={'customCheckbox' + canCreateWsClass} htmlFor='newUserCanCreateWs'>
-                      <input type='checkbox' id='newUserCanCreateWs' onClick={() => this.handleClickCheckboxNewUser('canCreateWs')} value={newUser.canCreateWs} />
+                    <label className={'customCheckbox' + canCreateWorkspaceClass} htmlFor='newUserCanCreateWorkspace'>
+                      <input type='checkbox' id='newUserCanCreateWorkspace' onClick={() => this.handleClickCheckboxNewUser('canCreateWorkspace')} value={newUser.rights.canCreateWorkspace} />
                       {__('this user can create workspace')}
                     </label>
                   </div>
@@ -239,7 +253,7 @@ export class UserForm extends React.Component {
                 <div className='col-sm-offset-2 col-sm-9'>
                   <div className='userForm__item checkbox'>
                     <label className={'customCheckbox' + isAdminClass} htmlFor='newUserIsAdmin'>
-                      <input type='checkbox' id='newUserIsAdmin' onClick={() => this.handleClickCheckboxNewUser('isAdmin')} value={newUser.isAdmin} />
+                      <input type='checkbox' id='newUserIsAdmin' onClick={() => this.handleClickCheckboxNewUser('isAdmin')} value={newUser.rights.isAdmin} />
                       {__('this user is admin')}
                     </label>
                   </div>
@@ -275,5 +289,5 @@ export class UserForm extends React.Component {
   }
 }
 
-const mapStateToProps = ({ tracimConfig, activeForm, user, apiData, timezone }) => ({ tracimConfig, activeForm, user, addedUser: apiData.user, timezone })
+const mapStateToProps = ({ tracimConfig, activeForm, apiData, timezone }) => ({ tracimConfig, activeForm, addedUser: apiData.user, timezone })
 export default connect(mapStateToProps)(UserForm)

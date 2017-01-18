@@ -4,8 +4,10 @@ export default function tracimConfig (state = {
   lang: 'en',
   login: '',
   email: '',
-  canCreateWs: false,
-  canCreateUser: false,
+  rights: {
+    canCreateWs: false,
+    canCreateUser: false
+  },
   selectedWs: {
     id: 0,
     name: ''

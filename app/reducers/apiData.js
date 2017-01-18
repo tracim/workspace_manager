@@ -20,11 +20,9 @@ export default function apiData (state = {
 }, action) {
   switch (action.type) {
     case SET_WS_DATA:
-      let tempUser
-      const apiDataUserFromWs = action.roleList.filter((oneRole) => oneRole.workspaceId === action.id).map((oneRole) => {
-        tempUser = action.userList.find(oneUser => oneUser.id === oneRole.userId)
-        return { id: tempUser.id, isNew: false, name: tempUser.name, role: oneRole.roleId, subscribeNotif: oneRole.subscribedNotif }
-      })
+      const apiDataUserFromWs = action.roleList.map((oneRole) => (
+        { id: oneRole.user.id, isNew: false, name: oneRole.user.name, role: oneRole.role, subscribeNotif: oneRole.subscribed_to_notif }
+      ))
       return {...state, workspace: {...state.workspace, id: action.id, label: action.label}, user: apiDataUserFromWs}
 
     case SET_WS_DESCRIPTION:
@@ -39,8 +37,8 @@ export default function apiData (state = {
         : state
 
     case ADD_NEW_USER_DATA:
-      const { name, email, pw, timezone, canCreateWs, isAdmin, config } = action
-      return {...state, user: [...state.user, { id: generateNewUserId(), isNew: true, name, email, pw, timezone, canCreateWs, isAdmin, config, role: ROLE_LIST.READER.id, subscribeNotif: false }]}
+      const { name, email, pw, timezone, rights, config } = action
+      return {...state, user: [...state.user, { id: generateNewUserId(), isNew: true, name, email, pw, timezone, rights, config, role: ROLE_LIST.READER.id, subscribeNotif: false }]}
 
     case REMOVE_USER_DATA:
       return {...state, user: reject(state.user, { id: action.id })}

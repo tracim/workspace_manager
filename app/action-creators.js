@@ -1,3 +1,5 @@
+import { GLOBAL_API_PATH } from './lib/helper.js'
+
 export const INIT_WORKSPACE = 'INIT_WORKSPACE'
 
 export const INIT_USER = 'INIT_USER'
@@ -45,67 +47,33 @@ export function initTimezone (timezoneList) {
 export function requestAsyncInitStart () {
   return { type: REQUEST_INITDATA_START }
 }
-export function fetchConfig (apiPath) {
+
+export function fetchConfig () {
   return function (dispatch) { // returning a function in an action creator is allowed by the middleware redux-thunk to handle asynchronous actions
     dispatch(requestAsyncInitStart()) // set isFetching to true to display a loader
     const fetchCfg = {
       method: 'GET',
       headers: { 'Accept': 'application/json' }
     }
-    return Promise.all(
-      // without map()
-      // [
-      //   fetch(apiPath + '/tracim_config', fetchCfg)
-      //   .then(response => response.json()).then(json => dispatch(setTracimConfig(json.value_list)))
-      //   .catch((e) => console.log('Error fetching tracim_config', e)),
+    return Promise.all([
+      fetch(GLOBAL_API_PATH + '/users/me', fetchCfg)
+      .then(response => response.json()).then(json => dispatch(setTracimConfig(json)))
+      .catch((e) => console.log('Error fetching tracim_config', e)),
 
-      //   fetch(apiPath + '/workspaces', fetchCfg)
-      //   .then(response => response.json()).then(json => dispatch(initWorkspace(json.value_list)))
-      //   .catch((e) => console.log('Error fetching workspaces', e)),
+      fetch(GLOBAL_API_PATH + '/workspaces_temp', fetchCfg) // @TODO: remove the _temp when pluging to real api
+      .then(response => response.json()).then(json => dispatch(initWorkspace(json.value_list)))
+      .catch((e) => console.log('Error fetching workspaces', e)),
 
-      //   fetch(apiPath + '/users', fetchCfg)
-      //   .then(response => response.json()).then(json => dispatch(initUser(json.value_list)))
-      //   .catch((e) => console.log('Error fetching users', e)),
-
-      //   fetch(apiPath + '/users_workspaces', fetchCfg)
-      //   .then(response => response.json()).then(json => dispatch(initRole(json.value_list)))
-      //   .catch((e) => console.log('Error fetching users_workspaces', e)),
-
-      //   fetch(apiPath + '/timezone', fetchCfg)
-      //   .then(response => response.json()).then(json => dispatch(initTimezone(json.value_list)))
-      //   .catch((e) => console.log('Error fetching timezone', e))
-      // ]
-
-      // with map()
-      [{
-        endpoint: 'tracim_config',
-        callback: setTracimConfig
-      }, {
-        endpoint: 'workspaces',
-        callback: initWorkspace
-      }, {
-        endpoint: 'users',
-        callback: initUser
-      }, {
-        endpoint: 'users_workspaces',
-        callback: initRole
-      }, {
-        endpoint: 'timezone',
-        callback: initTimezone
-      }]
-      .map((oneFetch) => // this map() will return an array of promises
-        fetch(apiPath + oneFetch.endpoint, fetchCfg)
-          .then(response => response.json()).then(json => dispatch(oneFetch.callback(json.value_list)))
-          .catch((e) => console.log('Error fetchting ' + oneFetch.endpoint, e))
-      )
-
-    ).then((allData) =>
-      dispatch(setWorkspaceData(allData[0].tracimConfig.selectedWs.id, allData[0].tracimConfig.selectedWs.label, allData[2].userList, allData[3].userRole))
-    )
+      fetch(GLOBAL_API_PATH + '/timezone', fetchCfg)
+      .then(response => response.json()).then(json => dispatch(initTimezone(json.value_list)))
+      .catch((e) => console.log('Error fetching timezone', e))
+    ])
+    // .then(() => window.setTimeout(() => dispatch(requestAsyncInitEnd()), 20000)) // delay the callback for testing purpose
     .then(() => dispatch(requestAsyncInitEnd())) // set isFetching to false to hide the loader
     .catch((e) => console.log('Error fetching data', e))
   }
 }
+
 export function requestAsyncInitEnd () {
   return { type: REQUEST_INITDATA_END }
 }
@@ -114,8 +82,8 @@ export function switchForm (formId) {
   return { type: SWITCH_FORM, formId }
 }
 
-export function setWorkspaceData (id, label, userList, roleList) {
-  return { type: SET_WS_DATA, id, label, userList, roleList }
+export function setWorkspaceData (id, label, roleList) {
+  return { type: SET_WS_DATA, id, label, roleList }
 }
 export function setWorkspaceDescription (description) {
   return { type: SET_WS_DESCRIPTION, description }

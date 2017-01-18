@@ -11,7 +11,7 @@ export function RoleInput ({ roleId, userId, isChecked, onClickRole }) {
 }
 
 RoleInput.propTypes = {
-  roleId: React.PropTypes.number.isRequired,
+  roleId: React.PropTypes.string.isRequired,
   userId: React.PropTypes.number.isRequired,
   isChecked: React.PropTypes.bool.isRequired,
   onClickRole: React.PropTypes.func.isRequired

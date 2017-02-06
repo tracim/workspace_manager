@@ -52,12 +52,12 @@ export class UserForm extends React.Component {
       return
     }
 
-    fetch(GLOBAL_API_PATH + 'users/acp/temp_name', { // @TODO: remplace tempa_name by '?q=' + searchTerm
+    fetch(GLOBAL_API_PATH + '/users/acp?q=' + searchTerm, {
       'method': 'GET',
       'headers': { 'Accept': 'application/json' }
     })
     .then(response => response.json())
-    .then(json => this.setState({...this.state, searchedUser: searchTerm, matchingUser: json}))
+    .then(json => this.setState({...this.state, searchedUser: searchTerm, matchingUser: json.value_list}))
     .catch(e => this.setState({...this.state, searchedUser: searchTerm, matchingUser: []}))
   }
 
@@ -105,7 +105,7 @@ export class UserForm extends React.Component {
       }
     })
 
-    fetch(GLOBAL_API_PATH + 'users/email/' + 'email_to_test' + '/can_be_used', {
+    fetch(GLOBAL_API_PATH + '/users/email/' + newEmail + '/can_be_used', {
       'method': 'GET',
       'headers': { 'Accept': 'application/json' }
     })

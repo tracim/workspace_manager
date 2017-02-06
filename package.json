@@ -7,7 +7,8 @@
     "start": "NODE_ENV=development && webpack --watch",
     "servdev": "NODE_ENV=development && webpack-dev-server --port 8082 --watch --colors --inline --hot --content-base dist/",
     "build": "NODE_ENV=production webpack -p",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start-static-mockapi": "json-server --routes api/routes.json --watch api/static_db.json --port 3001"
   },
   "author": "Côme Huguiès",
   "license": "ISC",
@@ -19,7 +20,9 @@
     "parser": "babel-eslint",
     "ignore": []
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "json-server": "^0.9.4"
+  },
   "dependencies": {
     "babel-core": "^6.17.0",
     "babel-eslint": "^7.1.1",

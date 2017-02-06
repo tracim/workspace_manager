@@ -1,0 +1,12 @@
+{
+  "/users/me": "/users_me",
+  "/users/acp": "/users_acp",
+  "/users/email/:email_to_test/can_be_used": "/users_email_can-be-used",
+  "/workspaces/name/:name_to_test/can_be_used": "/workspaces_name_can-be-used",
+  "/workspaces/0/users/roles": "/workspaces_0_users_roles",
+  "/workspaces/1/users/roles": "/workspaces_1_users_roles",
+  "/workspaces/2/users/roles": "/workspaces_2_users_roles",
+  "/workspaces/3/users/roles": "/workspaces_3_users_roles",
+  "/workspaces/3/users/roles": "/workspaces_3_users_roles",
+  "/workspaces/4/users/roles": "/workspaces_4_users_roles"
+}

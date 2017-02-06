@@ -60,7 +60,7 @@ export function fetchConfig () {
       .then(response => response.json()).then(json => dispatch(setTracimConfig(json)))
       .catch((e) => console.log('Error fetching tracim_config', e)),
 
-      fetch(GLOBAL_API_PATH + '/workspaces_temp', fetchCfg) // @TODO: remove the _temp when pluging to real api
+      fetch(GLOBAL_API_PATH + '/workspaces', fetchCfg)
       .then(response => response.json()).then(json => dispatch(initWorkspace(json.value_list)))
       .catch((e) => console.log('Error fetching workspaces', e)),
 

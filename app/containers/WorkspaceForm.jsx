@@ -33,12 +33,12 @@ export class WorkspaceForm extends React.Component {
     const workspaceLabel = e.nativeEvent.target[e.nativeEvent.target.selectedIndex].text
 
     dispatch(requestAsyncInitStart())
-    fetch(GLOBAL_API_PATH + 'workspaces/' + workspaceId + '/users/roles', {
+    fetch(GLOBAL_API_PATH + '/workspaces/' + workspaceId + '/users/roles', {
       'method': 'GET',
       'headers': { 'Accept': 'application/json' }
     })
     .then(response => response.json())
-    .then(json => dispatch(setWorkspaceData(workspaceId, workspaceLabel, json)))
+    .then(json => dispatch(setWorkspaceData(workspaceId, workspaceLabel, json.value_list)))
     .then(() => dispatch(requestAsyncInitEnd()))
     // .then(() => new Promise((resolve, reject) => window.setTimeout(() => resolve(dispatch(requestAsyncInitEnd())), 5000))) // for testing purpose
     .then(() => dispatch(switchForm(1)))
@@ -48,7 +48,7 @@ export class WorkspaceForm extends React.Component {
     const newWorkspaceLabel = e.target.value
     this.setState({...this.state, checkWsStatus: ASYNC_STATUS.IN_PROGRESS})
 
-    fetch(GLOBAL_API_PATH + 'workspaces/name/' + 'name_to_test' + '/can_be_used', { // @TODO: replace name_to_test by newWorkspaceLabel
+    fetch(GLOBAL_API_PATH + '/workspaces/name/' + newWorkspaceLabel + '/can_be_used', {
       'method': 'GET',
       'headers': { 'Accept': 'application/json' }
     })

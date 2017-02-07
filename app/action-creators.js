@@ -62,11 +62,7 @@ export function fetchConfig () {
 
       fetch(GLOBAL_API_PATH + '/workspaces', fetchCfg)
       .then(response => response.json()).then(json => dispatch(initWorkspace(json.value_list)))
-      .catch((e) => console.log('Error fetching workspaces', e)),
-
-      fetch(GLOBAL_API_PATH + '/timezone', fetchCfg)
-      .then(response => response.json()).then(json => dispatch(initTimezone(json.value_list)))
-      .catch((e) => console.log('Error fetching timezone', e))
+      .catch((e) => console.log('Error fetching workspaces', e))
     ])
     // .then(() => window.setTimeout(() => dispatch(requestAsyncInitEnd()), 20000)) // delay the callback for testing purpose
     .then(() => dispatch(requestAsyncInitEnd())) // set isFetching to false to hide the loader

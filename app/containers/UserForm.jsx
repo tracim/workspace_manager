@@ -28,6 +28,7 @@ export class UserForm extends React.Component {
     this.state = {
       searchedUser: '',
       matchingUser: [],
+      timezoneList: [],
       searchedTimezone: '',
       matchingTimezone: [],
       formHeight: '0px',
@@ -37,6 +38,13 @@ export class UserForm extends React.Component {
       nameValid: true,
       emailValid: true
     }
+
+    fetch(GLOBAL_API_PATH + '/timezone', {
+      method: 'GET',
+      headers: { 'Accept': 'application/json' }
+    })
+    .then(response => response.json()).then(json => this.setState({...this.state, timezoneList: json.value_list}))
+    .catch(e => console.log('Error fetching timezone', e))
   }
 
   showForm = () => {
@@ -70,7 +78,7 @@ export class UserForm extends React.Component {
 
   handleSearchTimezone = (e) => {
     const searchTerm = e.target.value.toLowerCase()
-    const matchingTimezone = this.props.timezone.filter((oneTimezone) => oneTimezone.toLowerCase().includes(searchTerm))
+    const matchingTimezone = this.state.timezoneList.filter((oneTimezone) => oneTimezone.toLowerCase().includes(searchTerm))
 
     this.setState({...this.state, searchedTimezone: searchTerm, matchingTimezone: matchingTimezone})
   }

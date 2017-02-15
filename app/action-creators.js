@@ -93,8 +93,8 @@ export function addUserData (id, name) {
 export function addNewUserData (name, email, pw, timezone, canCreateWs, isAdmin, config) {
   return { type: ADD_NEW_USER_DATA, name, email, pw, timezone, canCreateWs, isAdmin, config }
 }
-export function removeUserData (id) {
-  return { type: REMOVE_USER_DATA, id }
+export function removeUserData (id, isNew) {
+  return { type: REMOVE_USER_DATA, id, isNew }
 }
 export function updateUserRoleData (userId, roleId) {
   return { type: UPDATE_USER_ROLE_DATA, userId, roleId }

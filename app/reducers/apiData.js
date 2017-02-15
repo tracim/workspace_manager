@@ -10,7 +10,7 @@ import {
 } from '../action-creators.js'
 import reject from 'lodash.reject'
 import findIndex from 'lodash.findindex'
-import { ROLE_LIST, generateNewUserId } from '../lib/helper.js'
+import { ROLE_LIST, USER_LOCAL_STATUS, generateNewUserId } from '../lib/helper.js'
 
 export default function apiData (state = {
   workspace: {
@@ -18,10 +18,12 @@ export default function apiData (state = {
   },
   user: []
 }, action) {
+  const { NO_UPDATE, UPDATED, CREATED, DELETED } = USER_LOCAL_STATUS
+
   switch (action.type) {
     case SET_WS_DATA:
-      const apiDataUserFromWs = action.roleList.map((oneRole) => (
-        { id: oneRole.user.id, isNew: false, name: oneRole.user.name, role: oneRole.role, subscribeNotif: oneRole.subscribed_to_notif }
+      const apiDataUserFromWs = action.roleList.map(oneRole => (
+        { id: oneRole.user.id, isNew: false, localStatus: NO_UPDATE, name: oneRole.user.name, role: oneRole.role, subscribeNotif: oneRole.subscribed_to_notif }
       ))
       return {...state, workspace: {...state.workspace, id: action.id, label: action.label}, user: apiDataUserFromWs}
 
@@ -33,30 +35,34 @@ export default function apiData (state = {
 
     case ADD_USER_DATA:
       return findIndex(state.user, { id: action.id }) === -1
-        ? {...state, user: [...state.user, { id: action.id, isNew: false, name: action.name, role: ROLE_LIST.READER.id, subscribeNotif: false }]}
+        ? {...state, user: [...state.user, { id: action.id, isNew: false, localStatus: NO_UPDATE, name: action.name, role: ROLE_LIST.READER.id, subscribeNotif: false }]}
         : state
 
     case ADD_NEW_USER_DATA:
       const { name, email, pw, timezone, rights, config } = action
-      return {...state, user: [...state.user, { id: generateNewUserId(), isNew: true, name, email, pw, timezone, rights, config, role: ROLE_LIST.READER.id, subscribeNotif: false }]}
+      return {...state, user: [...state.user, { id: generateNewUserId(), isNew: true, localStatus: CREATED, name, email, pw, timezone, rights, config, role: ROLE_LIST.READER.id, subscribeNotif: false }]}
 
     case REMOVE_USER_DATA:
-      return {...state, user: reject(state.user, { id: action.id })}
+      return action.isNew
+        ? {...state, user: reject(state.user, { id: action.id })}
+        : {...state, user: state.user.map(oneUser => oneUser.id === action.id ? {...oneUser, localStatus: DELETED} : oneUser)}
 
+    // note about localStatus : if user is CREATED, keep same localStatus when role change
     case UPDATE_USER_ROLE_DATA:
       return {
         ...state,
-        user: state.user.map((oneUser) => oneUser.id === action.userId
-          ? {...oneUser, role: action.roleId}
+        user: state.user.map(oneUser => oneUser.id === action.userId
+          ? {...oneUser, localStatus: oneUser.localStatus !== CREATED ? UPDATED : CREATED, role: action.roleId}
           : oneUser
         )
       }
 
+    // note about localStatus : if user is CREATED, keep same localStatus when emailNotif change
     case UPDATE_USER_EMAILNOTIF_DATA:
       return {
         ...state,
-        user: state.user.map((oneUser) => oneUser.id === action.userId
-          ? {...oneUser, subscribeNotif: action.checked}
+        user: state.user.map(oneUser => oneUser.id === action.userId
+          ? {...oneUser, localStatus: oneUser.localStatus !== CREATED ? UPDATED : CREATED, subscribeNotif: action.checked}
           : oneUser
         )
       }

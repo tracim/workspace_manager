@@ -36,6 +36,13 @@ export function displayRole (roleID) {
   }
 }
 
+export const USER_LOCAL_STATUS = {
+  NO_UPDATE: 'no_update',
+  UPDATED: 'updated',
+  CREATED: 'created',
+  DELETED: 'deleted'
+}
+
 export const WORKSPACE_RESERVED_ID = {
   NO_WORKSPACE_SELECTED: -1,
   NEW_WORKSPACE: -2

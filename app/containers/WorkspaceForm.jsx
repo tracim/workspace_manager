@@ -70,7 +70,7 @@ export class WorkspaceForm extends React.Component {
     const isBtnNextAllowed = (selectedWs.id !== WORKSPACE_RESERVED_ID.NO_WORKSPACE_SELECTED && selectedWs.id !== WORKSPACE_RESERVED_ID.NEW_WORKSPACE) || this.state.checkWsStatus === ASYNC_STATUS.OK
 
     return (
-      <Collapse isOpened={activeForm === 0} keepCollapsedContent className='workspaceForm form-horizontal' springConfig={{stiffness: 190, damping: 30}}>
+      <Collapse isOpened={activeForm === 0} className='workspaceForm form-horizontal' springConfig={{stiffness: 190, damping: 30}}>
         <div className='workspaceForm__item form-group'>
           <div className='col-sm-offset-1 col-sm-10'>
             <select className='form-control' value={selectedWs.id} onChange={this.handleAssignWorkspace}>

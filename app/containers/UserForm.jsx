@@ -167,7 +167,7 @@ export class UserForm extends React.Component {
     const isBtnNextAllowed = (addedUser.length >= 1)
 
     return (
-      <Collapse isOpened={activeForm === 1} keepCollapsedContent className='userForm form-horizontal' springConfig={{stiffness: 190, damping: 30}}>
+      <Collapse isOpened={activeForm === 1} className='userForm form-horizontal' springConfig={{stiffness: 190, damping: 30}}>
         <div className='userForm__form'>
 
           <div className='userForm__item form-group'>

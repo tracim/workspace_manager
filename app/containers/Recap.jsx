@@ -23,6 +23,7 @@ export class Recap extends React.Component {
     })
   }
 
+  // @Todo : taguer les users qui ont reçus un changement et ne renvoyer à l'api que ceux la
   handleSaveChanges = () => {
     this.setState({
       ...this.state,
@@ -41,7 +42,7 @@ export class Recap extends React.Component {
     const { activeForm, workspace, dispatch } = this.props
 
     return (
-      <Collapse isOpened={activeForm === 2} keepCollapsedContent className='recap form-horizontal' springConfig={{stiffness: 190, damping: 30}}>
+      <Collapse isOpened={activeForm === 2} className='recap form-horizontal' springConfig={{stiffness: 190, damping: 30}}>
         <div className='recap__content'>
           <div className='form-group'>
             <div className='col-sm-2'>

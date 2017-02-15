@@ -40,7 +40,7 @@ export const USER_LOCAL_STATUS = {
   NO_UPDATE: 'no_update',
   UPDATED: 'updated',
   CREATED: 'created',
-  DELETED: 'deleted'
+  REMOVED: 'removed_from_workspace'
 }
 
 export const WORKSPACE_RESERVED_ID = {

@@ -9,7 +9,6 @@ import {
   UPDATE_USER_EMAILNOTIF_DATA
 } from '../action-creators.js'
 import reject from 'lodash.reject'
-import findIndex from 'lodash.findindex'
 import { ROLE_LIST, USER_LOCAL_STATUS, generateNewUserId } from '../lib/helper.js'
 
 export default function apiData (state = {
@@ -18,7 +17,7 @@ export default function apiData (state = {
   },
   user: []
 }, action) {
-  const { NO_UPDATE, UPDATED, CREATED, DELETED } = USER_LOCAL_STATUS
+  const { NO_UPDATE, UPDATED, CREATED, REMOVED } = USER_LOCAL_STATUS
 
   switch (action.type) {
     case SET_WS_DATA:
@@ -33,9 +32,13 @@ export default function apiData (state = {
     case RESET_USER_DATA:
       return {...state, user: []}
 
+    // note about localStatus : we do not handle the case where, for exemple, a user is already in a ws, then it is removed, then it is added back.
+    // Its localStatus should be NO_UPDATE but since we dont keep initial user's state, we can't know that so we will set it's localStatus to UPDATED.
+    // So we will send to api a user without modification. No bit deal, backend will handle this case.
     case ADD_USER_DATA:
-      return findIndex(state.user, { id: action.id }) === -1
-        ? {...state, user: [...state.user, { id: action.id, isNew: false, localStatus: NO_UPDATE, name: action.name, role: ROLE_LIST.READER.id, subscribeNotif: false }]}
+      // return findIndex(state.user, { id: action.id }) === -1
+      return state.user.filter(oneUser => oneUser.id === action.id).length === 0
+        ? {...state, user: [...state.user, { id: action.id, isNew: false, localStatus: UPDATED, name: action.name, role: ROLE_LIST.READER.id, subscribeNotif: false }]}
         : state
 
     case ADD_NEW_USER_DATA:
@@ -45,7 +48,7 @@ export default function apiData (state = {
     case REMOVE_USER_DATA:
       return action.isNew
         ? {...state, user: reject(state.user, { id: action.id })}
-        : {...state, user: state.user.map(oneUser => oneUser.id === action.id ? {...oneUser, localStatus: DELETED} : oneUser)}
+        : {...state, user: state.user.map(oneUser => oneUser.id === action.id ? {...oneUser, localStatus: REMOVED} : oneUser)}
 
     // note about localStatus : if user is CREATED, keep same localStatus when role change
     case UPDATE_USER_ROLE_DATA:

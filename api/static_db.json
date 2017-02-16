@@ -149,7 +149,7 @@
       }
     ]
   },
-  "users_email_can-be-used": {
+  "users_email_can_be_used": {
     "can_be_used": true
   },
   "workspaces": {
@@ -304,10 +304,10 @@
   "workspaces_4_users_roles": {
     "value_list": []
   },
-  "workspaces_name_can-be-used": {
+  "workspaces_name_can_be_used": {
     "can_be_used": true
   },
-  "timezone": {
+  "timezones": {
     "value_list": [
       "Africa/Abidjan",
       "Africa/Accra",

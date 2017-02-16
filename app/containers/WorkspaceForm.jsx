@@ -22,7 +22,7 @@ export class WorkspaceForm extends React.Component {
     this.props.dispatch(setWorkspaceData(WORKSPACE_RESERVED_ID.NEW_WORKSPACE, '', [], []))
   }
 
-  handleAssignWorkspace = (e) => {
+  handleAssignWorkspace = e => {
     const workspaceId = parseInt(e.target.value)
     const { dispatch } = this.props
 
@@ -33,7 +33,7 @@ export class WorkspaceForm extends React.Component {
     const workspaceLabel = e.nativeEvent.target[e.nativeEvent.target.selectedIndex].text
 
     dispatch(requestAsyncInitStart())
-    fetch(GLOBAL_API_PATH + '/workspaces/' + workspaceId + '/users/roles', {
+    fetch(GLOBAL_API_PATH + 'workspaces/' + workspaceId + '/users/roles', {
       'method': 'GET',
       'headers': { 'Accept': 'application/json' }
     })
@@ -44,11 +44,11 @@ export class WorkspaceForm extends React.Component {
     .then(() => dispatch(switchForm(1)))
   }
 
-  handleChangeWorkspaceLabel = (e) => {
+  handleChangeWorkspaceLabel = e => {
     const newWorkspaceLabel = e.target.value
     this.setState({...this.state, checkWsStatus: ASYNC_STATUS.IN_PROGRESS})
 
-    fetch(GLOBAL_API_PATH + '/workspaces/name/' + newWorkspaceLabel + '/can_be_used', {
+    fetch(GLOBAL_API_PATH + 'workspaces/name/' + newWorkspaceLabel + '/can_be_used', {
       'method': 'GET',
       'headers': { 'Accept': 'application/json' }
     })
@@ -57,10 +57,10 @@ export class WorkspaceForm extends React.Component {
       this.setState({...this.state, checkWsStatus: json.can_be_used === true ? ASYNC_STATUS.OK : ASYNC_STATUS.ERROR})
       this.props.dispatch(setWorkspaceData(WORKSPACE_RESERVED_ID.NEW_WORKSPACE, newWorkspaceLabel, [], []))
     })
-    .catch((e) => console.log('Error fetching workspace', e))
+    .catch(e => console.log('Error fetching workspace', e))
   }
 
-  handleChangeWsDesc = (e) => {
+  handleChangeWsDesc = e => {
     this.props.dispatch(setWorkspaceDescription(e.target.value))
   }
 
@@ -86,7 +86,8 @@ export class WorkspaceForm extends React.Component {
             onChangeWsName={this.handleChangeWorkspaceLabel}
             onChangeWsDescription={this.handleChangeWsDesc}
             wsAvailableStatus={this.state.checkWsStatus}
-            formHeight={this.state.formHeight} />
+            formHeight={this.state.formHeight}
+          />
         )}
 
         <div className='workspaceForm__nextbtn'>

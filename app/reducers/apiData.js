@@ -9,7 +9,7 @@ import {
   UPDATE_USER_EMAILNOTIF_DATA
 } from '../action-creators.js'
 import reject from 'lodash.reject'
-import { ROLE_LIST, USER_LOCAL_STATUS, generateNewUserId } from '../lib/helper.js'
+import { ROLE_LIST, ROLE_LOCAL_STATUS, generateNewUserId } from '../lib/helper.js'
 
 export default function apiData (state = {
   workspace: {
@@ -17,7 +17,7 @@ export default function apiData (state = {
   },
   user: []
 }, action) {
-  const { NO_UPDATE, UPDATED, CREATED, REMOVED } = USER_LOCAL_STATUS
+  const { NO_UPDATE, UPDATED, CREATED, REMOVED } = ROLE_LOCAL_STATUS
 
   switch (action.type) {
     case SET_WS_DATA:
@@ -35,15 +35,45 @@ export default function apiData (state = {
     // note about localStatus : we do not handle the case where, for exemple, a user is already in a ws, then it is removed, then it is added back.
     // Its localStatus should be NO_UPDATE but since we dont keep initial user's state, we can't know that so we will set it's localStatus to UPDATED.
     // So we will send to api a user without modification. No bit deal, backend will handle this case.
+    // isNewWorkspace is true if the workspace has just been created with the workspace manager. All roles will then be new, so 'CREATED'
     case ADD_USER_DATA:
       // return findIndex(state.user, { id: action.id }) === -1
       return state.user.filter(oneUser => oneUser.id === action.id).length === 0
-        ? {...state, user: [...state.user, { id: action.id, isNew: false, localStatus: UPDATED, name: action.name, role: ROLE_LIST.READER.id, subscribeNotif: false }]}
+        ? {
+          ...state,
+          user: [
+            ...state.user, {
+              id: action.id,
+              isNew: false,
+              localStatus: action.isNewWorkspace ? CREATED : UPDATED,
+              name: action.name,
+              role: ROLE_LIST.READER.id,
+              subscribeNotif: false
+            }
+          ]
+        }
         : state
 
     case ADD_NEW_USER_DATA:
       const { name, email, pw, timezone, rights, config } = action
-      return {...state, user: [...state.user, { id: generateNewUserId(), isNew: true, localStatus: CREATED, name, email, pw, timezone, rights, config, role: ROLE_LIST.READER.id, subscribeNotif: false }]}
+      return {
+        ...state,
+        user: [
+          ...state.user, {
+            id: generateNewUserId(),
+            isNew: true,
+            localStatus: CREATED,
+            name,
+            email,
+            pw,
+            timezone,
+            rights,
+            config,
+            role: ROLE_LIST.READER.id,
+            subscribeNotif: false
+          }
+        ]
+      }
 
     case REMOVE_USER_DATA:
       return action.isNew

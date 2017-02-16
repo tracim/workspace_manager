@@ -46,11 +46,11 @@ export const fetchConfig = () => dispatch => {
   }
 
   return Promise.all([
-    fetch(GLOBAL_API_PATH + '/users/me', fetchCfg)
+    fetch(GLOBAL_API_PATH + 'users/me', fetchCfg)
     .then(response => response.json()).then(json => dispatch(setTracimConfig(json)))
     .catch(e => console.log('Error fetching tracim_config', e)),
 
-    fetch(GLOBAL_API_PATH + '/workspaces', fetchCfg)
+    fetch(GLOBAL_API_PATH + 'workspaces', fetchCfg)
     .then(response => response.json()).then(json => dispatch(initWorkspace(json.value_list)))
     .catch(e => console.log('Error fetching workspaces', e))
   ])
@@ -66,9 +66,9 @@ export const switchForm = formId => ({ type: SWITCH_FORM, formId })
 export const setWorkspaceData = (id, label, roleList) => ({ type: SET_WS_DATA, id, label, roleList })
 export const setWorkspaceDescription = description => ({ type: SET_WS_DESCRIPTION, description })
 export const resetUserData = () => ({ type: RESET_USER_DATA })
-export const addUserData = (id, name) => ({ type: ADD_USER_DATA, id, name })
-export const addNewUserData = (name, email, pw, timezone, canCreateWs, isAdmin, config) => ({
-  type: ADD_NEW_USER_DATA, name, email, pw, timezone, canCreateWs, isAdmin, config
+export const addUserData = (id, name, isNewWorkspace) => ({ type: ADD_USER_DATA, id, name, isNewWorkspace })
+export const addNewUserData = (name, email, pw, timezone, rights, config) => ({
+  type: ADD_NEW_USER_DATA, name, email, pw, timezone, rights, config
 })
 export const removeUserData = (id, isNew) => ({ type: REMOVE_USER_DATA, id, isNew })
 export const updateUserRoleData = (userId, roleId) => ({ type: UPDATE_USER_ROLE_DATA, userId, roleId })

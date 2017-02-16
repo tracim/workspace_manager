@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import Collapse from 'react-collapse'
 import { switchForm, addUserData, addNewUserData } from '../action-creators.js'
-import { ASYNC_STATUS, GLOBAL_API_PATH } from '../lib/helper.js'
+import { ASYNC_STATUS, GLOBAL_API_PATH, WORKSPACE_RESERVED_ID } from '../lib/helper.js'
 import StatusPicto from '../components/StatusPicto.jsx'
 import RoleForm from './RoleForm.jsx'
 import __ from '../trad.js'
@@ -39,7 +39,7 @@ export class UserForm extends React.Component {
       emailValid: true
     }
 
-    fetch(GLOBAL_API_PATH + '/timezone', {
+    fetch(GLOBAL_API_PATH + 'timezones', {
       method: 'GET',
       headers: { 'Accept': 'application/json' }
     })
@@ -60,7 +60,7 @@ export class UserForm extends React.Component {
       return
     }
 
-    fetch(GLOBAL_API_PATH + '/users/acp?q=' + searchTerm, {
+    fetch(GLOBAL_API_PATH + 'users/acp?q=' + searchTerm, {
       'method': 'GET',
       'headers': { 'Accept': 'application/json' }
     })
@@ -73,7 +73,7 @@ export class UserForm extends React.Component {
     this.setState({...this.state, selectedUser: user.id, formHeight: '0px', roleFormVisibility: true, searchedUser: '', matchingUser: []})
 
     if (user === '') return
-    this.props.dispatch(addUserData(user.id, user.name))
+    this.props.dispatch(addUserData(user.id, user.name, this.props.addedWorkspace.id === WORKSPACE_RESERVED_ID.NEW_WORKSPACE))
   }
 
   handleSearchTimezone = (e) => {
@@ -113,7 +113,7 @@ export class UserForm extends React.Component {
       }
     })
 
-    fetch(GLOBAL_API_PATH + '/users/email/' + newEmail + '/can_be_used', {
+    fetch(GLOBAL_API_PATH + 'users/email/' + newEmail + '/can_be_used', {
       'method': 'GET',
       'headers': { 'Accept': 'application/json' }
     })
@@ -297,5 +297,5 @@ export class UserForm extends React.Component {
   }
 }
 
-const mapStateToProps = ({ tracimConfig, activeForm, apiData, timezone }) => ({ tracimConfig, activeForm, addedUser: apiData.user, timezone })
+const mapStateToProps = ({ tracimConfig, activeForm, apiData, timezone }) => ({ tracimConfig, activeForm, addedUser: apiData.user, addedWorkspace: apiData.workspace, timezone })
 export default connect(mapStateToProps)(UserForm)

@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import RoleInput from '../components/RoleInput.jsx'
 import SubscribeNotifInput from '../components/SubscribeNotifInput.jsx'
 import { removeUserData, updateUserRoleData, updateUserSubscribeNotifData } from '../action-creators.js'
-import { ROLE_LIST, USER_LOCAL_STATUS } from '../lib/helper.js'
+import { ROLE_LIST, ROLE_LOCAL_STATUS } from '../lib/helper.js'
 import __ from '../trad.js'
 
 export class RoleForm extends React.Component {
@@ -30,7 +30,7 @@ export class RoleForm extends React.Component {
               <th>{ __(ROLE_LIST.WORKSPACE_MANAGER.label) }</th>
               <th>{ __(ROLE_LIST.SUBSCRIBE_USER_NOTIF.label) }</th>
             </tr>
-            { this.props.apiData.user.map((oneUser, i) => oneUser.localStatus !== USER_LOCAL_STATUS.REMOVED &&
+            { this.props.apiData.user.map((oneUser, i) => oneUser.localStatus !== ROLE_LOCAL_STATUS.REMOVED &&
               <tr key={'userRoleKey_' + oneUser.userId + '_' + i}>
                 <td>
                   <div className='roleForm__tab__removeuser__wrapper'>

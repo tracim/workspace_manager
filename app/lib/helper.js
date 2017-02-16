@@ -36,7 +36,7 @@ export function displayRole (roleID) {
   }
 }
 
-export const USER_LOCAL_STATUS = {
+export const ROLE_LOCAL_STATUS = {
   NO_UPDATE: 'no_update',
   UPDATED: 'updated',
   CREATED: 'created',

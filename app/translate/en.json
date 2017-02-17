@@ -27,7 +27,8 @@
   "users": "Users",
   "creation": "Creation",
   "selection": "Selection",
+  "modification": "Modification",
   "invitation": "Invitation",
-  "suppretion": "Suppretion",
+  "suppression": "Suppression",
   "as": "as"
 }

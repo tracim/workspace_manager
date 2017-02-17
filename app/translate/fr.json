@@ -27,7 +27,8 @@
   "users": "Utilisateurs",
   "creation": "Création",
   "selection": "Sélection",
+  "modification": "Modification",
   "invitation": "Invitation",
-  "suppretion": "Suppretion",
+  "suppression": "Suppression",
   "as": "en tant que"
 }

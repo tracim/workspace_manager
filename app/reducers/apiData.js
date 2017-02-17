@@ -51,7 +51,7 @@ export default function apiData (state = {
             ...state.user, {
               id: action.id,
               isNew: false,
-              localStatus: action.isNewWorkspace ? CREATED : UPDATED,
+              localStatus: CREATED,
               name: action.name,
               role: ROLE_LIST.READER.id,
               subscribeNotif: false

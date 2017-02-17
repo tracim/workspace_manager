@@ -86,10 +86,22 @@ export class Recap extends React.Component {
     .then(() => console.log('all requests successfull'))
   }
 
+  displayLocalStatus = (user) => {
+    const { UPDATED, CREATED, REMOVED } = ROLE_LOCAL_STATUS
+
+    // isNew the user has been created with the workspace manager. Its added role will have to be creacted since the user doesn't exists
+    if (user.isNew) return __('creation')
+    // CREATED means the role has been created for an existing user.
+    else if (user.localStatus === UPDATED) return __('modification')
+    else if (user.localStatus === CREATED) return __('invitation')
+    else if (user.localStatus === REMOVED) return __('suppression')
+    else return ''
+  }
+
   render () {
     const { activeForm, workspace, dispatch } = this.props
     const { NEW_WORKSPACE } = WORKSPACE_RESERVED_ID
-    const { NO_UPDATE, UPDATED } = ROLE_LOCAL_STATUS
+    const { NO_UPDATE } = ROLE_LOCAL_STATUS
 
     return (
       <Collapse isOpened={activeForm === 2} className='recap form-horizontal' springConfig={{stiffness: 190, damping: 30}}>
@@ -120,7 +132,7 @@ export class Recap extends React.Component {
               <div className='recap__data'>
                 { this.state.userWithAsyncStatus.map(oneUser => oneUser.localStatus !== NO_UPDATE &&
                   <RecapUserItem
-                    type={oneUser.isNew ? __('creation') : oneUser.localStatus === UPDATED ? __('invitation') : __('suppretion')}
+                    type={this.displayLocalStatus(oneUser)}
                     name={oneUser.name}
                     role={displayRole(oneUser.role)}
                     status={oneUser.asyncStatus}

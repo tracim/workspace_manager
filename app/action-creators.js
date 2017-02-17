@@ -17,6 +17,7 @@ export const SWITCH_FORM = 'SWITCH_FORM'
 
 export const SET_WS_DATA = 'SET_WS_DATA'
 export const SET_WS_DESCRIPTION = 'SET_WS_DESCRIPTION'
+export const SET_WS_ASYNCSTATUS = 'SET_WS_ASYNCSTATUS'
 export const RESET_USER_DATA = 'RESET_USER_DATA'
 export const ADD_USER_DATA = 'ADD_USER_DATA'
 export const ADD_NEW_USER_DATA = 'ADD_NEW_USER_DATA'
@@ -65,6 +66,7 @@ export const switchForm = formId => ({ type: SWITCH_FORM, formId })
 
 export const setWorkspaceData = (id, label, roleList) => ({ type: SET_WS_DATA, id, label, roleList })
 export const setWorkspaceDescription = description => ({ type: SET_WS_DESCRIPTION, description })
+export const setWorkspaceAsyncStatus = asyncStatus => ({ type: SET_WS_ASYNCSTATUS, asyncStatus })
 export const resetUserData = () => ({ type: RESET_USER_DATA })
 export const addUserData = (id, name, isNewWorkspace) => ({ type: ADD_USER_DATA, id, name, isNewWorkspace })
 export const addNewUserData = (name, email, pw, timezone, rights, config) => ({

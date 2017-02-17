@@ -2,17 +2,19 @@ import React from 'react'
 import { ASYNC_STATUS } from '../lib/helper.js'
 
 export function StatusPicto ({ status }) { // this is not a reducer
+  const { INIT, IN_PROGRESS, OK, ERROR } = ASYNC_STATUS
+
   switch (status) {
-    case ASYNC_STATUS.INIT:
+    case INIT:
       return null
 
-    case ASYNC_STATUS.IN_PROGRESS:
+    case IN_PROGRESS:
       return <i className='fa fa-spinner fa-spin fa-lg' />
 
-    case ASYNC_STATUS.OK:
+    case OK:
       return <i className='fa fa-check fa-lg' style={{color: 'green'}} />
 
-    case ASYNC_STATUS.ERROR:
+    case ERROR:
       return <i className='fa fa-close fa-lg' style={{color: 'red'}} />
 
     default:

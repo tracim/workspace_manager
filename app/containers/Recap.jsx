@@ -1,10 +1,11 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import Collapse from 'react-collapse'
-import { ASYNC_STATUS, WORKSPACE_RESERVED_ID, ROLE_LOCAL_STATUS, GLOBAL_API_PATH, displayRole } from '../lib/helper.js'
+import { ASYNC_STATUS, WORKSPACE_RESERVED_ID, ROLE_LOCAL_STATUS, displayRole,
+  createWorkspace, createUser, addRole, updateRole, removeRole } from '../lib/helper.js'
 import RecapUserItem from '../components/RecapUserItem.jsx'
 import StatusPicto from '../components/StatusPicto.jsx'
-import { switchForm } from '../action-creators.js'
+import { switchForm, setWorkspaceAsyncStatus } from '../action-creators.js'
 import __ from '../trad.js'
 
 export class Recap extends React.Component {
@@ -23,35 +24,6 @@ export class Recap extends React.Component {
     })
   }
 
-  createWorkspace = (name, description) => fetch(GLOBAL_API_PATH + 'workspaces', {
-    method: 'POST',
-    headers: {'Accept': 'application/json', 'Content-Type': 'application/json'},
-    body: JSON.stringify({name, description})
-  })
-
-  createUser = ({name, email, timezone, rights, subscribeNotif}) => fetch(GLOBAL_API_PATH + 'users', {
-    method: 'POST',
-    headers: {'Accept': 'application/json', 'Content-Type': 'application/json'},
-    body: JSON.stringify({name, email, timezone, rights, _params: {send_email_notif: subscribeNotif}})
-  })
-
-  addRole = (workspaceId, userId, role, subscribeNotif) => fetch(GLOBAL_API_PATH + 'workspaces/' + workspaceId + '/users/' + userId + '/role', {
-    method: 'POST',
-    headers: {'Accept': 'application/json', 'Content-Type': 'application/json'},
-    body: JSON.stringify({role, subscribed_to_notif: subscribeNotif})
-  })
-
-  updateRole = (workspaceId, userId, role, subscribeNotif) => fetch(GLOBAL_API_PATH + 'workspaces/' + workspaceId + '/users/' + userId + '/role', {
-    method: 'PUT',
-    headers: {'Accept': 'application/json', 'Content-Type': 'application/json'},
-    body: JSON.stringify({role, subscribed_to_notif: subscribeNotif})
-  })
-
-  removeRole = (workspaceId, userId) => fetch(GLOBAL_API_PATH + 'workspaces/' + workspaceId + '/users/' + userId + '/role', {
-    method: 'DELETE',
-    headers: {'Accept': 'application/json', 'Content-Type': 'application/json'}
-  })
-
   setUserAsyncStatus = (userId, asyncStatus) => this.setState({
     ...this.state,
     userWithAsyncStatus: this.state.userWithAsyncStatus.map(oneUser => oneUser.id === userId ? {...oneUser, asyncStatus} : oneUser)
@@ -61,24 +33,24 @@ export class Recap extends React.Component {
     const { NO_UPDATE, UPDATED, CREATED, REMOVED } = ROLE_LOCAL_STATUS
     const { OK, ERROR } = ASYNC_STATUS
 
-    userList.map(oneUser => {
+    return userList.map(oneUser => {
       // return window.setTimeout(() => { // surround the switch with this function for testing purpose. Dont forget to add 'return' in front of 'switch'
       // }, Math.random() * 1000)
       switch (oneUser.localStatus) {
-        case CREATED:
+        case CREATED: // case : role has been created (user selected from autocomplete)
           return (oneUser.isNew
-              ? this.createUser(oneUser).then(res => res.json())
+              ? createUser(oneUser).then(response => response.json())
               : Promise.resolve({id: oneUser.id})
             )
-            .then(jsonNewUser => this.addRole(workspaceId, jsonNewUser.id, oneUser.role, oneUser.subscribeNotif))
+            .then(jsonNewUser => addRole(workspaceId, jsonNewUser.id, oneUser.role, oneUser.subscribeNotif))
             .then(() => this.setUserAsyncStatus(oneUser.id, OK))
             .catch(e => this.setUserAsyncStatus(oneUser.id, ERROR))
-        case UPDATED:
-          return this.updateRole(workspaceId, oneUser.id, oneUser.role, oneUser.subscribeNotif)
+        case UPDATED: // case : role has been updated (user already in role list when selecting the workspace)
+          return updateRole(workspaceId, oneUser.id, oneUser.role, oneUser.subscribeNotif)
             .then(() => this.setUserAsyncStatus(oneUser.id, OK))
             .catch(e => this.setUserAsyncStatus(oneUser.id, ERROR))
-        case REMOVED:
-          return this.removeRole(workspaceId, oneUser.id)
+        case REMOVED: // case : role has been removed (user already in role list when selecting the workspace then role removed)
+          return removeRole(workspaceId, oneUser.id)
             .then(() => this.setUserAsyncStatus(oneUser.id, OK))
             .catch(e => this.setUserAsyncStatus(oneUser.id, ERROR))
         case NO_UPDATE:
@@ -88,9 +60,9 @@ export class Recap extends React.Component {
   }
 
   handleSaveChanges = () => {
-    const { workspace } = this.props
+    const { workspace, dispatch } = this.props
     const { userWithAsyncStatus } = this.state
-    const { IN_PROGRESS } = ASYNC_STATUS
+    const { IN_PROGRESS, OK, ERROR } = ASYNC_STATUS
     const { NEW_WORKSPACE } = WORKSPACE_RESERVED_ID
 
     this.setState({
@@ -101,18 +73,23 @@ export class Recap extends React.Component {
     // about Promise.all : sendAllUsersToApi returns an array of promise (from the map). If we return that array in the then(jsonNewWorkspace => ...),
     // it will be a promise with a value equals to an array of promise which is wrong ; we need the actual array of promise.
     workspace.id === NEW_WORKSPACE
-      ? this.createWorkspace(workspace.name, workspace.description)
-        .then(res => res.json()) // uncomment when res comes from a real fetch
+      ? createWorkspace(workspace.name, workspace.description)
+        .then(response => {
+          dispatch(setWorkspaceAsyncStatus(OK))
+          return response.json()
+        })
+        .catch(e => dispatch(setWorkspaceAsyncStatus(ERROR)))
         .then(jsonNewWorkspace => Promise.all(this.sendAllUsersToApi(jsonNewWorkspace.id, userWithAsyncStatus)))
 
       : Promise.all(this.sendAllUsersToApi(workspace.id, userWithAsyncStatus))
-    .then(() => console.log('woot?'))
+
+    .then(() => console.log('all requests successfull'))
   }
 
   render () {
     const { activeForm, workspace, dispatch } = this.props
     const { NEW_WORKSPACE } = WORKSPACE_RESERVED_ID
-    const { NO_UPDATE } = ROLE_LOCAL_STATUS
+    const { NO_UPDATE, UPDATED } = ROLE_LOCAL_STATUS
 
     return (
       <Collapse isOpened={activeForm === 2} className='recap form-horizontal' springConfig={{stiffness: 190, damping: 30}}>
@@ -133,7 +110,7 @@ export class Recap extends React.Component {
                   <div className='recap__data__item__action'>[{ workspace.id === NEW_WORKSPACE ? __('creation') : __('selection') }]</div>
                   <div className='recap__data__item__name'>{ workspace.label }</div>
                   <div className='recap__data__item__status'>
-                    <StatusPicto status={ASYNC_STATUS.IN_PROGRESS} />
+                    <StatusPicto status={workspace.asyncStatus} />
                   </div>
                 </div>
               </div>
@@ -143,7 +120,7 @@ export class Recap extends React.Component {
               <div className='recap__data'>
                 { this.state.userWithAsyncStatus.map(oneUser => oneUser.localStatus !== NO_UPDATE &&
                   <RecapUserItem
-                    type={oneUser.isNew ? __('creation') : __('invitation')}
+                    type={oneUser.isNew ? __('creation') : oneUser.localStatus === UPDATED ? __('invitation') : __('suppretion')}
                     name={oneUser.name}
                     role={displayRole(oneUser.role)}
                     status={oneUser.asyncStatus}

@@ -66,15 +66,15 @@ export default function apiData (state = {
         ...state,
         user: [
           ...state.user, {
-            id: generateNewUserId(),
-            isNew: true,
-            localStatus: CREATED,
             name,
             email,
             pw,
             timezone,
             rights,
             config,
+            id: generateNewUserId(),
+            isNew: true,
+            localStatus: CREATED,
             role: ROLE_LIST.READER.id,
             subscribeNotif: false
           }

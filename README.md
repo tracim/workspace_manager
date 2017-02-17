@@ -16,7 +16,7 @@ npm install
 
 ### Start mock api server
 ```
-npm run start-static-mockapi
+node api/server.js
 ```
 Api will listen to port 3001
 

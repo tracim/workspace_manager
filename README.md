@@ -24,7 +24,7 @@ Api will listen to port 3001
 ```
 npm run servdev
 ```
-will compile and open webpack-dev-server with the default browser
+then open http://localhost:8082
 
 ## Build
 ### Build all sources

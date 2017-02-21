@@ -1,7 +1,7 @@
 [![Standard - JavaScript Style Guide](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/)
 
 # Tracim Workspace Manager
-Allow to configure all the roles of a Tracim workspace
+Allows to configure all the roles of a Tracim workspace in one place through a wizzard
 
 ## Setup
 ### Node js

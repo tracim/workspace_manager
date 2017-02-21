@@ -1,8 +1,9 @@
 [![Standard - JavaScript Style Guide](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/)
 
 # Tracim Workspace Manager
+Allow to configure all the roles of a Tracim workspace
 
-## install
+## Setup
 ### Node js
 ```
 curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -

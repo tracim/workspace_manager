@@ -21,7 +21,7 @@ node api/server.js
 ```
 Api will listen to port 3001
 
-#### To run the app immediatly (advised)
+#### To run and test the app immediatly
 ```
 npm run servdev
 ```
@@ -30,7 +30,7 @@ then open http://localhost:8082
 ## Build
 ### Build all sources
 ```
-npm build
+npm run build
 ```
 #### To run the app 
 open /dist/index.html in a web server

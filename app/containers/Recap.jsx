@@ -5,6 +5,7 @@ import { ASYNC_STATUS, WORKSPACE_RESERVED_ID, ROLE_LOCAL_STATUS, displayRole,
   createWorkspace, createUser, addRole, updateRole, removeRole } from '../lib/helper.js'
 import RecapUserItem from '../components/RecapUserItem.jsx'
 import StatusPicto from '../components/StatusPicto.jsx'
+import SubmitBtn from '../components/SubmitBtn.jsx'
 import { switchForm, setWorkspaceAsyncStatus } from '../action-creators.js'
 import __ from '../trad.js'
 
@@ -13,7 +14,8 @@ export class Recap extends React.Component {
     super()
     this.state = {
       workspaceAsyncstatus: {},
-      userWithAsyncStatus: []
+      userWithAsyncStatus: [],
+      submitBtnStatus: ASYNC_STATUS.INIT
     }
   }
 
@@ -34,8 +36,6 @@ export class Recap extends React.Component {
     const { OK, ERROR } = ASYNC_STATUS
 
     return userList.map(oneUser => {
-      // return window.setTimeout(() => { // surround the switch with this function for testing purpose. Dont forget to add 'return' in front of 'switch'
-      // }, Math.random() * 1000)
       switch (oneUser.localStatus) {
         case CREATED: // case : role has been created (user selected from autocomplete)
           return (oneUser.isNew
@@ -62,13 +62,16 @@ export class Recap extends React.Component {
   handleSaveChanges = () => {
     const { workspace, dispatch } = this.props
     const { userWithAsyncStatus } = this.state
-    const { IN_PROGRESS, OK, ERROR } = ASYNC_STATUS
+    const { INIT, IN_PROGRESS, OK, ERROR } = ASYNC_STATUS
     const { NEW_WORKSPACE } = WORKSPACE_RESERVED_ID
 
     this.setState({
       ...this.state,
-      userWithAsyncStatus: userWithAsyncStatus.map(oneUser => ({...oneUser, asyncStatus: IN_PROGRESS}))
+      userWithAsyncStatus: userWithAsyncStatus.map(oneUser => ({...oneUser, asyncStatus: IN_PROGRESS})),
+      submitBtnStatus: IN_PROGRESS
     })
+
+    const timeoutApiCall = window.setTimeout(() => this.setState({...this.state, submitBtnStatus: INIT}), 60000) // reset the validate btn after 60s
 
     // about Promise.all : sendAllUsersToApi returns an array of promise (from the map). If we return that array in the then(jsonNewWorkspace => ...),
     // it will be a promise with a value equals to an array of promise which is wrong ; we need the actual array of promise.
@@ -83,7 +86,10 @@ export class Recap extends React.Component {
 
       : Promise.all(this.sendAllUsersToApi(workspace.id, userWithAsyncStatus))
 
-    .then(() => console.log('all requests successfull'))
+    .then(() => {
+      window.clearTimeout(timeoutApiCall)
+      this.setState({...this.state, submitBtnStatus: OK})
+    })
   }
 
   displayLocalStatus = (user) => {
@@ -142,9 +148,7 @@ export class Recap extends React.Component {
               </div>
 
               <div className='recap__nextbtn'>
-                <button className='recap__nextbtn__btn btn' onClick={this.handleSaveChanges}>
-                  <i className='fa fa-gear' />
-                </button>
+                <SubmitBtn status={this.state.submitBtnStatus} handleSaveChanges={this.handleSaveChanges} />
               </div>
             </div>
           </div>

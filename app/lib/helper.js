@@ -90,6 +90,11 @@ export function addRole (workspaceId, userId, role, subscribeNotif) {
 }
 
 export function updateRole (workspaceId, userId, role, subscribeNotif) {
+  // return new Promise((resolve, reject) => { // for debugg purpose, to delay the result of the async call, dont forget to remove the return before fetch
+  //   window.setTimeout(() => resolve(
+  // => fetch goes here <=
+  //   ), Math.random() * 100000)
+  // })
   return fetch(GLOBAL_API_PATH + 'workspaces/' + workspaceId + '/users/' + userId + '/role', {
     method: 'PUT',
     headers: {'Accept': 'application/json', 'Content-Type': 'application/json'},

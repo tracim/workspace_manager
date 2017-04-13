@@ -30,5 +30,8 @@
   "modification": "Modification",
   "invitation": "Invitation",
   "suppression": "Suppression",
-  "as": "as"
+  "as": "as",
+  "validate": "Validate",
+  "in progress": "In progress",
+  "close the window": "Close the window"
 }

@@ -33,5 +33,7 @@
   "as": "as",
   "validate": "Validate",
   "in progress": "In progress",
-  "close the window": "Close the window"
+  "close the window": "Close the window",
+  "next": "Next",
+  "previous": "Previous"
 }

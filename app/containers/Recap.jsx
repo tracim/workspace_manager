@@ -5,7 +5,8 @@ import { ASYNC_STATUS, WORKSPACE_RESERVED_ID, ROLE_LOCAL_STATUS, displayRole,
   createWorkspace, createUser, addRole, updateRole, removeRole } from '../lib/helper.js'
 import RecapUserItem from '../components/RecapUserItem.jsx'
 import StatusPicto from '../components/StatusPicto.jsx'
-import SubmitBtn from '../components/SubmitBtn.jsx'
+import SubmitToApiBtn from '../components/SubmitToApiBtn.jsx'
+import SwitchFormBtn from '../components/SwitchFormBtn.jsx'
 import { switchForm, setWorkspaceAsyncStatus } from '../action-creators.js'
 import __ from '../trad.js'
 
@@ -113,11 +114,7 @@ export class Recap extends React.Component {
       <Collapse isOpened={activeForm === 2} className='recap form-horizontal' springConfig={{stiffness: 190, damping: 30}}>
         <div className='recap__content'>
           <div className='form-group'>
-            <div className='col-sm-2'>
-              <button className='userForm__backbtn btn' onClick={() => dispatch(switchForm(1))}>
-                <i className='fa fa-chevron-left' />
-              </button>
-            </div>
+            <div className='col-sm-2' />
 
             <div className='col-sm-9'>
               <div className='recap__title'>{__('summary')}</div>
@@ -146,10 +143,17 @@ export class Recap extends React.Component {
                   />
                 )}
               </div>
+            </div>
 
-              <div className='recap__nextbtn'>
-                <SubmitBtn status={this.state.submitBtnStatus} handleSaveChanges={this.handleSaveChanges} />
-              </div>
+            <div className='col-sm-1' />
+          </div>
+
+          <div className='recap__nextbtn clearfix'>
+            <div className='col-sm-2'>
+              <SwitchFormBtn side={'left'} onClick={() => dispatch(switchForm(1))} specificClass={'userForm__backbtn'} />
+            </div>
+            <div className='col-sm-9'>
+              <SubmitToApiBtn status={this.state.submitBtnStatus} handleSaveChanges={this.handleSaveChanges} />
             </div>
           </div>
         </div>

@@ -4,6 +4,7 @@ import Collapse from 'react-collapse'
 import { switchForm, addUserData, addNewUserData } from '../action-creators.js'
 import { ASYNC_STATUS, GLOBAL_API_PATH, WORKSPACE_RESERVED_ID } from '../lib/helper.js'
 import StatusPicto from '../components/StatusPicto.jsx'
+import SwitchFormBtn from '../components/SwitchFormBtn.jsx'
 import RoleForm from './RoleForm.jsx'
 import __ from '../trad.js'
 
@@ -171,11 +172,7 @@ export class UserForm extends React.Component {
         <div className='userForm__form'>
 
           <div className='userForm__item form-group'>
-            <div className='col-sm-1'>
-              <button className='userForm__backbtn btn' onClick={() => dispatch(switchForm(0))}>
-                <i className='fa fa-chevron-left' />
-              </button>
-            </div>
+            <div className='col-sm-1' />
             <div className='col-sm-10'>
               {/*
               <select className='form-control' value={this.state.selectedUser} onChange={(e) => this.assignUser(e.target.value)}>
@@ -287,10 +284,9 @@ export class UserForm extends React.Component {
 
         <RoleForm visible={roleFormVisibility} />
 
-        <div className='userForm__nextbtn'>
-          <button className='userForm__nextbtn__btn btn' onClick={() => dispatch(switchForm(2))} disabled={!isBtnNextAllowed}>
-            <i className='fa fa-chevron-right' />
-          </button>
+        <div className='userForm__nextbtn clearfix'>
+          <SwitchFormBtn side={'left'} onClick={() => dispatch(switchForm(0))} specificClass={'userForm__backbtn'} />
+          <SwitchFormBtn side={'right'} onClick={() => dispatch(switchForm(2))} specificClass={'userForm__nextbtn__btn'} disabled={!isBtnNextAllowed} />
         </div>
       </Collapse>
     )

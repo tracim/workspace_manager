@@ -2,7 +2,7 @@ import React from 'react'
 import { ASYNC_STATUS } from '../lib/helper.js'
 import __ from '../trad.js'
 
-export function SubmitBtn ({ status, handleSaveChanges }) {
+export function SubmitToApiBtn ({ status, handleSaveChanges }) {
   const btnDesign = (status => {
     switch (status) {
       case ASYNC_STATUS.INIT:
@@ -15,16 +15,16 @@ export function SubmitBtn ({ status, handleSaveChanges }) {
   })(status)
 
   return (
-    <button className='recap__nextbtn__btn btn' onClick={handleSaveChanges}>
+    <button className='recap__nextbtn__btn btn btn-default' onClick={handleSaveChanges}>
       <i className={'fa ' + btnDesign.icon} />
       { btnDesign.msg }
     </button>
   )
 }
 
-SubmitBtn.propTypes = {
+SubmitToApiBtn.propTypes = {
   status: React.PropTypes.number.isRequired,
   handleSaveChanges: React.PropTypes.func.isRequired
 }
 
-export default SubmitBtn
+export default SubmitToApiBtn

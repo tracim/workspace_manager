@@ -101,13 +101,17 @@ $wizardWidth = 868px
     &__picto
       width 25px
       margin-top 5px
-  &__nextbtn
-    text-align right
-    &__btn
-      margin 15px 3px 0 0
-.userForm
   &__backbtn
-    margin 0 0 0 3px
+    float left
+    margin 15px 0 0 3px
+    & i
+      margin-right 5px
+  &__nextbtn__btn
+    float right
+    margin 15px 3px 0 0
+    & i
+      margin-right 5px
+.userForm
   &__searchUser
     position relative
     width 100%
@@ -190,6 +194,8 @@ $btnRemoveGeneric
   &__nextbtn__btn
     padding 5px 20px
     font-size 14px
+    &:hover > i.fa-gear
+      transform rotate(100deg)
     i
       vertical-align bottom
       font-size 20px
@@ -197,8 +203,6 @@ $btnRemoveGeneric
       &.fa-gear
         transition transform 0.3s
         transition-timing-function linear
-    &:hover > i
-      transform rotate(100deg)
   &__data
     &__item
       padding 5px 0 0 30px

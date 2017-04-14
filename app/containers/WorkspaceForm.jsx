@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import Collapse from 'react-collapse'
 import { switchForm, setWorkspaceData, setWorkspaceDescription, requestAsyncInitStart, requestAsyncInitEnd } from '../action-creators.js'
 import NewWorkspaceForm from '../components/NewWorkspaceForm.jsx'
+import SwitchFormBtn from '../components/SwitchFormBtn.jsx'
 import { ASYNC_STATUS, WORKSPACE_RESERVED_ID, GLOBAL_API_PATH } from '../lib/helper.js'
 import __ from '../trad.js'
 
@@ -91,9 +92,7 @@ export class WorkspaceForm extends React.Component {
         )}
 
         <div className='workspaceForm__nextbtn'>
-          <button className='workspaceForm__nextbtn__btn btn' onClick={() => dispatch(switchForm(1))} disabled={!isBtnNextAllowed}>
-            <i className={isFetching ? 'fa fa-spinner fa-spin' : 'fa fa-chevron-right'} />
-          </button>
+          <SwitchFormBtn side={'right'} onClick={() => dispatch(switchForm(1))} specificClass={'workspaceForm__nextbtn__btn'} disabled={!isBtnNextAllowed} isFetching={isFetching} />
         </div>
       </Collapse>
     )

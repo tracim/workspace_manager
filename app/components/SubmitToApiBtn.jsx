@@ -15,7 +15,7 @@ export function SubmitToApiBtn ({ status, handleSaveChanges }) {
   })(status)
 
   return (
-    <button className='recap__nextbtn__btn btn btn-default' onClick={handleSaveChanges}>
+    <button className='recap__nextbtn__btn btn btn-success' onClick={handleSaveChanges}>
       <i className={'fa ' + btnDesign.icon} />
       { btnDesign.msg }
     </button>

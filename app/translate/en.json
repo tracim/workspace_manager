@@ -35,5 +35,8 @@
   "in progress": "In progress",
   "close the window": "Close the window",
   "next": "Next",
-  "previous": "Previous"
+  "previous": "Previous",
+  "subscriber": "Subscribed",
+  "not subscriber": "Not subscribed",
+  "remove user from workspace": "Remove user from workspace"
 }

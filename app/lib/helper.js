@@ -26,14 +26,23 @@ export const ROLE_LIST = {
     label: 'subscribe user to notifications'
   }
 }
-export function displayRole (roleID) {
+export function displayRole (roleId) {
   const { READER, CONTRIBUTOR, CONTENT_MANAGER, WORKSPACE_MANAGER, SUBSCRIBE_USER_NOTIF } = ROLE_LIST
-  switch (roleID) {
+  switch (roleId) {
     case READER.id: return READER.label
     case CONTRIBUTOR.id: return CONTRIBUTOR.label
     case CONTENT_MANAGER.id: return CONTENT_MANAGER.label
     case WORKSPACE_MANAGER.id: return WORKSPACE_MANAGER.label
     case SUBSCRIBE_USER_NOTIF.id: return SUBSCRIBE_USER_NOTIF.label
+  }
+}
+export function displayPictoForRole (roleId) {
+  const { READER, CONTRIBUTOR, CONTENT_MANAGER, WORKSPACE_MANAGER } = ROLE_LIST
+  switch (roleId) {
+    case READER.id: return 'fa-eye'
+    case CONTRIBUTOR.id: return 'fa-pencil'
+    case CONTENT_MANAGER.id: return 'fa-graduation-cap'
+    case WORKSPACE_MANAGER.id: return 'fa-legal'
   }
 }
 

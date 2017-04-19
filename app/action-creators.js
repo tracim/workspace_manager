@@ -25,6 +25,8 @@ export const REMOVE_USER_DATA = 'REMOVE_USER_DATA'
 export const UPDATE_USER_ROLE_DATA = 'UPDATE_USER_ROLE_DATA'
 export const UPDATE_USER_EMAILNOTIF_DATA = 'UPDATE_USER_EMAILNOTIF_DATA'
 
+export const TOGGLE_SHOW_ROLE_LIST = 'TOGGLE_SHOW_ROLE_LIST'
+
 export const initWorkspace = wsList => ({ type: INIT_WORKSPACE, wsList })
 
 export const initUser = userList => ({ type: INIT_USER, userList })
@@ -75,3 +77,5 @@ export const addNewUserData = (name, email, pw, timezone, rights, config) => ({
 export const removeUserData = (id, isNew) => ({ type: REMOVE_USER_DATA, id, isNew })
 export const updateUserRoleData = (userId, roleId) => ({ type: UPDATE_USER_ROLE_DATA, userId, roleId })
 export const updateUserSubscribeNotifData = (userId, checked) => ({ type: UPDATE_USER_EMAILNOTIF_DATA, userId, checked })
+
+export const toggleShowRoleList = (id) => ({ type: TOGGLE_SHOW_ROLE_LIST, id })

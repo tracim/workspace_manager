@@ -7,7 +7,8 @@ import {
   ADD_NEW_USER_DATA,
   REMOVE_USER_DATA,
   UPDATE_USER_ROLE_DATA,
-  UPDATE_USER_EMAILNOTIF_DATA
+  UPDATE_USER_EMAILNOTIF_DATA,
+  TOGGLE_SHOW_ROLE_LIST
 } from '../action-creators.js'
 import reject from 'lodash.reject'
 import { ROLE_LIST, ROLE_LOCAL_STATUS, ASYNC_STATUS, generateNewUserId } from '../lib/helper.js'
@@ -104,6 +105,12 @@ export default function apiData (state = {
           ? {...oneUser, localStatus: oneUser.localStatus !== CREATED ? UPDATED : CREATED, subscribeNotif: action.checked}
           : oneUser
         )
+      }
+
+    case TOGGLE_SHOW_ROLE_LIST:
+      return {
+        ...state,
+        user: state.user.map(oneUser => ({...oneUser, showRoleList: oneUser.id === action.id ? !oneUser.showRoleList : false}))
       }
 
     default:

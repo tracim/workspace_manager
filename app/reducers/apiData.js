@@ -55,7 +55,7 @@ export default function apiData (state = {
               localStatus: CREATED,
               name: action.name,
               role: ROLE_LIST.READER.id,
-              subscribeNotif: false
+              subscribeNotif: true
             }
           ]
         }
@@ -77,7 +77,7 @@ export default function apiData (state = {
             isNew: true,
             localStatus: CREATED,
             role: ROLE_LIST.READER.id,
-            subscribeNotif: false
+            subscribeNotif: true
           }
         ]
       }

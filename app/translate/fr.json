@@ -7,6 +7,7 @@
   "choose a workspace": "Choisir un workspace",
   "or": "Ou",
   "create a new workspace": "Créer un nouveau workspace",
+  "new": "Nouveau",
   "name": "Nom",
   "description": "Description",
   "create a new user": "Créer un nouvel utilisateur",
@@ -37,5 +38,6 @@
   "previous": "Précédent",
   "subscriber": "Abonné",
   "not subscriber": "Non abonné",
-  "remove user from workspace": "Retirer l'utilisateur du workspace"
+  "remove user from workspace": "Retirer l'utilisateur du workspace",
+  "workspace manager - working on": "Workspace manager - Edition de"
 }

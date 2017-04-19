@@ -23,7 +23,7 @@ export class WorkspaceForm extends React.Component {
     this.props.dispatch(setWorkspaceData(WORKSPACE_RESERVED_ID.NEW_WORKSPACE, '', [], []))
   }
 
-  handleAssignWorkspace = e => {
+  handleAssignWorkspace = (e) => {
     const workspaceId = parseInt(e.target.value)
     const { dispatch } = this.props
 
@@ -42,12 +42,17 @@ export class WorkspaceForm extends React.Component {
     .then(json => dispatch(setWorkspaceData(workspaceId, workspaceLabel, json.value_list)))
     .then(() => dispatch(requestAsyncInitEnd()))
     // .then(() => new Promise((resolve, reject) => window.setTimeout(() => resolve(dispatch(requestAsyncInitEnd())), 5000))) // for testing purpose
-    .then(() => dispatch(switchForm(1)))
+    .then(() => {
+      document.title = `${__('workspace manager - working on')} ${workspaceLabel}`
+      dispatch(switchForm(1))
+    })
   }
 
-  handleChangeWorkspaceLabel = e => {
+  handleChangeWorkspaceLabel = (e) => {
     const newWorkspaceLabel = e.target.value
+
     this.setState({...this.state, checkWsStatus: ASYNC_STATUS.IN_PROGRESS})
+    document.title = `${__('workspace manager - working on')} ${newWorkspaceLabel} (${__('new')})`
 
     fetch(GLOBAL_API_PATH + 'workspaces/name/' + newWorkspaceLabel + '/can_be_used', {
       'method': 'GET',
@@ -61,7 +66,7 @@ export class WorkspaceForm extends React.Component {
     .catch(e => console.log('Error fetching workspace', e))
   }
 
-  handleChangeWsDesc = e => {
+  handleChangeWsDesc = (e) => {
     this.props.dispatch(setWorkspaceDescription(e.target.value))
   }
 
@@ -91,7 +96,7 @@ export class WorkspaceForm extends React.Component {
           />
         )}
 
-        <div className='workspaceForm__nextbtn'>
+        <div className='workspaceForm__nextbtn clearfix'>
           <SwitchFormBtn side={'right'} onClick={() => dispatch(switchForm(1))} specificClass={'workspaceForm__nextbtn__btn'} disabled={!isBtnNextAllowed} isFetching={isFetching} />
         </div>
       </Collapse>

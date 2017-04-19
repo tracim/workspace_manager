@@ -267,7 +267,7 @@ export class UserForm extends React.Component {
                 <div className='col-sm-offset-2 col-sm-9'>
                   <div className='userForm__item checkbox'>
                     <label className={'customCheckbox' + sendEmailNotifClass} htmlFor='newUserSendEmailNotif'>
-                      <input type='checkbox' id='newUserSendEmailNotif' onClick={() => this.handleClickSendEmailNotif()} value={newUser.config.sendEmailNotif} checked />
+                      <input type='checkbox' id='newUserSendEmailNotif' onClick={() => this.handleClickSendEmailNotif()} value={newUser.config.sendEmailNotif} defaultChecked />
                       {__('notify by email the user about his account creation')}
                     </label>
                   </div>

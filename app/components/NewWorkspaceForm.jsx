@@ -5,15 +5,19 @@ import __ from '../trad.js'
 export function NewWorkspaceForm ({ onClickBtnNewWorkspace, onChangeWsName, onChangeWsDescription, wsAvailableStatus, formHeight }) {
   return (
     <div className='workspaceForm__formwrapper'>
-      <div className='workspaceForm__item__separator form-group'>
-        <div className='col-sm-offset-1 col-sm-10'>{ __('or') }</div>
-      </div>
+      { formHeight === '0px' &&
+        <div>
+          <div className='workspaceForm__item__separator form-group'>
+            <div className='col-sm-offset-1 col-sm-10'>{ __('or') }</div>
+          </div>
 
-      <div className='workspaceForm__item__text-link form-group'>
-        <div className='col-sm-offset-1 col-sm-10'>
-          <span onClick={onClickBtnNewWorkspace}>{ __('create a new workspace') }</span>
+          <div className='workspaceForm__item__text-link form-group'>
+            <div className='col-sm-offset-1 col-sm-10'>
+              <span onClick={onClickBtnNewWorkspace}>{ __('create a new workspace') }</span>
+            </div>
+          </div>
         </div>
-      </div>
+      }
 
       <div className='workspaceForm__wrapper-hidden' style={{height: formHeight}}>
         <div className='workspaceForm__item  form-group'>

@@ -19,8 +19,12 @@ export class WorkspaceForm extends React.Component {
   }
 
   handleShowForm = () => {
-    this.setState({formHeight: this.state.formHeight === '0px' ? this.state.formMaxHeight : '0px', checkWsStatus: ASYNC_STATUS.INIT})
+    this.setState({...this.state, formHeight: this.state.formMaxHeight, checkWsStatus: ASYNC_STATUS.INIT})
     this.props.dispatch(setWorkspaceData(WORKSPACE_RESERVED_ID.NEW_WORKSPACE, '', [], []))
+  }
+
+  handleHideForm = () => {
+    this.setState({...this.state, formHeight: '0px'})
   }
 
   handleAssignWorkspace = (e) => {
@@ -77,16 +81,18 @@ export class WorkspaceForm extends React.Component {
 
     return (
       <Collapse isOpened={activeForm === 0} className='workspaceForm form-horizontal' springConfig={{stiffness: 190, damping: 30}}>
-        <div className='workspaceForm__item form-group'>
-          <div className='col-sm-offset-1 col-sm-10'>
-            <select className='form-control' value={selectedWs.id} onChange={this.handleAssignWorkspace}>
-              <option value={WORKSPACE_RESERVED_ID.NO_WORKSPACE_SELECTED}>{ __('choose a workspace') }</option>
-              { workspace.map((item, i) => <option value={item.id} key={'ws_' + i}>{item.label}</option>) }
-            </select>
+        { this.state.formHeight === '0px' &&
+          <div className='workspaceForm__item form-group'>
+            <div className='col-sm-offset-1 col-sm-10'>
+              <select className='form-control' value={selectedWs.id} onChange={this.handleAssignWorkspace}>
+                <option value={WORKSPACE_RESERVED_ID.NO_WORKSPACE_SELECTED}>{ __('choose a workspace') }</option>
+                { workspace.map((item, i) => <option value={item.id} key={'ws_' + i}>{item.label}</option>) }
+              </select>
+            </div>
           </div>
-        </div>
+        }
 
-        { tracimConfig.rights.canCreateWorkspace && (
+        { tracimConfig.rights.canCreateWorkspace &&
           <NewWorkspaceForm
             onClickBtnNewWorkspace={this.handleShowForm}
             onChangeWsName={this.handleChangeWorkspaceLabel}
@@ -94,7 +100,20 @@ export class WorkspaceForm extends React.Component {
             wsAvailableStatus={this.state.checkWsStatus}
             formHeight={this.state.formHeight}
           />
-        )}
+        }
+
+        { this.state.formHeight !== '0px' &&
+          <div>
+            <div className='workspaceForm__item__separator form-group'>
+              <div className='col-sm-offset-1 col-sm-10'>{ __('or') }</div>
+            </div>
+            <div className='workspaceForm__item__text-link form-group'>
+              <div className='col-sm-offset-1 col-sm-10'>
+                <span onClick={this.handleHideForm}>{ __('choose an existing workspace') }</span>
+              </div>
+            </div>
+          </div>
+        }
 
         <div className='workspaceForm__nextbtn clearfix'>
           <SwitchFormBtn side={'right'} onClick={() => dispatch(switchForm(1))} specificClass={'workspaceForm__nextbtn__btn'} disabled={!isBtnNextAllowed} isFetching={isFetching} />

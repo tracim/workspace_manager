@@ -33,7 +33,7 @@ export class UserForm extends React.Component {
       searchedTimezone: '',
       matchingTimezone: [],
       formHeight: '0px',
-      formMaxHeight: '356px', // magic number equals to the total height of the form (must be updated if form's html change)
+      formMaxHeight: '366px', // magic number equals to the total height of the form (must be updated if form's html change)
       roleFormVisibility: true,
       newUser: newUserInit,
       nameValid: true,
@@ -48,11 +48,9 @@ export class UserForm extends React.Component {
     .catch(e => console.log('Error fetching timezone', e))
   }
 
-  showForm = () => {
-    this.state.formHeight === '0px'
-      ? this.setState({...this.state, selectedUser: '', formHeight: this.state.formMaxHeight, roleFormVisibility: false, newUser: newUserInit})
-      : this.setState({...this.state, formHeight: '0px', roleFormVisibility: true})
-  }
+  handleShowForm = () => this.setState({...this.state, selectedUser: '', formHeight: this.state.formMaxHeight, roleFormVisibility: false, newUser: newUserInit})
+
+  handleHideForm = () => this.setState({...this.state, selectedUser: '', formHeight: '0px', roleFormVisibility: true})
 
   handleSearchUser = (e) => {
     const searchTerm = e.target.value.toLowerCase()
@@ -170,41 +168,46 @@ export class UserForm extends React.Component {
     return (
       <Collapse isOpened={activeForm === 1} className='userForm form-horizontal' springConfig={{stiffness: 190, damping: 30}}>
         <div className='userForm__form'>
-
-          <div className='userForm__item form-group'>
-            <div className='col-sm-1' />
-            <div className='col-sm-10'>
-              {/*
-              <select className='form-control' value={this.state.selectedUser} onChange={(e) => this.assignUser(e.target.value)}>
-                <option value=''>Choisir un utilisateur</option>
-                { user.map((item, i) => <option value={item.id} key={'user_' + i}>{item.name}</option>) }
-              </select>
-              */}
-              <div className='userForm__searchUser'>
-                <input type='text' className='userForm__searchUser__input form-control' id='searchUser' placeholder={__('search for a user')} onChange={this.handleSearchUser} value={searchedUser} />
-                <div className='userForm__searchUser__autocomplete generic-autocomplete' style={{display: matchingUser.length > 0 ? 'block' : 'none'}}>
-                  { matchingUser.map((oneUser, i) =>
-                    <div className='userForm__searchUser__autocomplete__item generic-autocomplete__item' key={'user_' + i} onClick={() => this.assignUser(oneUser)}>
-                      {oneUser.name}
-                    </div>
-                  )}
+          { this.state.formHeight === '0px' &&
+            <div className='userForm__item form-group'>
+              <div className='col-sm-1' />
+              <div className='col-sm-10'>
+                {/*
+                <select className='form-control' value={this.state.selectedUser} onChange={(e) => this.assignUser(e.target.value)}>
+                  <option value=''>Choisir un utilisateur</option>
+                  { user.map((item, i) => <option value={item.id} key={'user_' + i}>{item.name}</option>) }
+                </select>
+                */}
+                <div className='userForm__searchUser'>
+                  <input type='text' className='userForm__searchUser__input form-control' id='searchUser' placeholder={__('search for a user')} onChange={this.handleSearchUser} value={searchedUser} />
+                  <div className='userForm__searchUser__autocomplete generic-autocomplete' style={{display: matchingUser.length > 0 ? 'block' : 'none'}}>
+                    { matchingUser.map((oneUser, i) =>
+                      <div className='userForm__searchUser__autocomplete__item generic-autocomplete__item' key={'user_' + i} onClick={() => this.assignUser(oneUser)}>
+                        {oneUser.name}
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+          }
 
           { tracimConfig.rights.canCreateUser && (
             <div className='workspaceForm__formwrapper'>
 
-              <div className='workspaceForm__item__separator form-group'>
-                <div className='col-sm-offset-1 col-sm-10'>{__('or')}</div>
-              </div>
+              { this.state.formHeight === '0px' &&
+                <div>
+                  <div className='workspaceForm__item__separator form-group'>
+                    <div className='col-sm-offset-1 col-sm-10'>{__('or')}</div>
+                  </div>
 
-              <div className='userForm__item__text-link form-group'>
-                <div className='col-sm-offset-1 col-sm-10'>
-                  <span onClick={this.showForm}>{ roleFormVisibility ? __('create a new user') : __('cancel') }</span>
+                  <div className='userForm__item__text-link form-group'>
+                    <div className='col-sm-offset-1 col-sm-10'>
+                      <span onClick={this.handleShowForm}>{ roleFormVisibility ? __('create a new user') : __('cancel') }</span>
+                    </div>
+                  </div>
                 </div>
-              </div>
+              }
 
               <div className='userForm__wrapper-hidden' style={{height: formHeight}}>
 
@@ -276,6 +279,19 @@ export class UserForm extends React.Component {
                 <button className='col-sm-offset-9 col-sm-2 btn' onClick={this.handleClickAddNewUser}>
                   {__('add')}
                 </button>
+
+                { this.state.formHeight !== '0px' &&
+                  <div>
+                    <div className='workspaceForm__item__separator form-group'>
+                      <div className='col-sm-offset-1 col-sm-10'>{ __('or') }</div>
+                    </div>
+                    <div className='workspaceForm__item__text-link form-group'>
+                      <div className='col-sm-offset-1 col-sm-10'>
+                        <span onClick={this.handleHideForm}>{ __('choose an existing user') }</span>
+                      </div>
+                    </div>
+                  </div>
+                }
               </div>
             </div>
           )}

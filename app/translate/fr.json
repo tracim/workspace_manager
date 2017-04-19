@@ -22,6 +22,7 @@
   "this user can create workspace": "Cet utilisateur peut créer des espaces de travail",
   "this user is admin": "Cet utilisateur est un administrateur",
   "notify by email the user about his account creation": "Notifier par mail l'utilisateur de la création de son compte",
+  "choose an existing user": "Choisir un utilisateur existant",
   "add": "Ajouter",
   "summary": "Résumé",
   "workspace": "Espace de travail",

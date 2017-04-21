@@ -13,7 +13,7 @@ export class WorkspaceForm extends React.Component {
 
     this.state = {
       formHeight: '0px',
-      formMaxHeight: '98px', // magic number equals to the total height of the form (must be updated if form's html change)
+      formMaxHeight: '150px', // magic number equals to the total height of the form (must be updated if form's html change)
       checkWsStatus: ASYNC_STATUS.INIT
     }
   }

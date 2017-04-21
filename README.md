@@ -32,5 +32,5 @@ then open http://localhost:8082
 ```
 npm run build
 ```
-#### To run the app 
-open /dist/index.html in a web server
+#### To run the app
+open /dist/index.html in a browser

@@ -33,7 +33,7 @@ export function NewWorkspaceForm ({ onClickBtnNewWorkspace, onChangeWsName, onCh
         <div className='workspaceForm__item  form-group'>
           <label className='col-sm-2 control-label' htmlFor='newWsDesc'>{ __('description') }</label>
           <div className='col-sm-9'>
-            <input type='text' className='form-control' id='newWsDesc' onChange={onChangeWsDescription} />
+            <textarea className='form-control' rows='4' id='newWsDesc' onChange={onChangeWsDescription} />
           </div>
         </div>
       </div>

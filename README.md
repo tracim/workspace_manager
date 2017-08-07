@@ -19,7 +19,8 @@ npm install
 ```
 npm run start-static-mockapi
 ```
-Api will listen to port 3001
+Api will listen to port 3001 by default. You can change the port by editing GLOBAL_PORT variable in api/server.js
+Dont forget to edit the apiPath html attribute of where you want to insert the workspace manager
 
 #### To run and test the app immediatly
 ```
@@ -34,3 +35,4 @@ npm run build
 ```
 #### To run the app
 open /dist/index.html in a browser
+
